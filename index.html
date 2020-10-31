@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>科研</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div id="bk">
+        <div id="infobar">
+            <info id="info0">Codenames</info>
+            <info id="info1">Duet</info>
+            <info id="info2">！</info>
+        </div>
+        <div id="stage">
+            <!-- <canvas id="canva" width="1300" height="650"></canvas> -->
+            <table id="cards">
+            </table>
+        </div>
+        <div id="con">
+            <table class="block" id="net">
+                <tr> <td>昵称：</td>  <td><input  id="nick" class="inp" type="text"></td> </tr>
+                <tr> <td>服务器：</td><td><input  id="addr" class="inp" type="text"></td> </tr>
+                <tr> <td>端口：</td>  <td><input  id="port" class="inp" type="text"> <button id="link">连接</button></td> </tr>
+                <!-- <tr> <td>tp：</td><td><input  id="type" class="inp" type="text"></td> </tr> -->
+                <tr>
+                    <td colspan="2"> <i style="color: brown">改昵称，先连接，后开始</i> </td>
+                </tr>
+            </table>
+
+            <table class="block" id="ctrl">
+                <tr> 
+                    <td> <button class="pad" id="ready"> 准备好了 </button> </td> 
+                </tr>
+
+                <tr>
+                    <td>已猜对：</td>
+                    <td> <p id="credit">0</p> </td>
+                </tr>
+
+                <tr>
+                    <td> <input  id="hint0" class="inp-hint" type="text" placeholder="关键词"></td> </td>  
+                    <td> <input  id="hint1" class="inp-hint" type="text" placeholder="数字"></td> </td>  
+                    <td> <button class="pad" id="guess">给出提示</button> </td>  
+                </tr>
+
+                <tr id="onlines">
+                    <td colspan="3">当前在线： <p id="online-user"></p> </td>
+                </tr>
+            </table>
+
+            <div class="block" id="chat">
+                <div id="chat_board">
+                </div>
+                <div id="say">
+                    <input id="speech" type="text"/> <button id="speak">发送</button>
+                </div>
+            </div>            
+        </div>
+    </div>
+</body>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
+<script src="index.js"></script>
+</html>
