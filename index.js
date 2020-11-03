@@ -5,17 +5,14 @@ var   ter = 100
 var cd = {
         'beat' : 0,
         'chat' : 0,
-        'ask_line' : 0,
         'info' : 0,
     }
 var beat_fail = 0
 var player_id = 0, player_type = 0, play_id = 0, playing = 0
 var chat_id = 0
 
-// var c = document.getElementById("canva")
-// var cxt = c.getContext("2d")
-// cxt.fillStyle = "#efefde"
-// var lines = [], drawing = false, draw_cnt = 0, up_line = 0, draw_id = 0
+var cards = [], green = [], black = [], grid = [], round = 0
+var rival = '', hinter = -1
 
 $(() => { 
     $('#nick').val('You')
@@ -25,47 +22,19 @@ $(() => {
 
     for(let i=0; i<5; ++i){
         let s = ''
-        for(let j=0; j<5; ++j) s += '<td id="c_' + (i*10+j) + '"></td>'
+        for(let j=0; j<5; ++j) {
+            p0 = '<p id="c_' + (i*5+j) + '"></p>'
+            p1 = '<p class="cinfo" id="i_' + (i*5+j) + '"></p>'
+            s += '<td class="card" id="b_' + (i*5+j) + '">' + p0 + p1 + '</td>'
+        }
         $('#cards').append('<tr>' + s + '</tr>')
     }
 
     for(let i=0; i<5; ++i)
         for(let j=0; j<5; ++j){
-            let s = '<p>' + (i*10+j) + '</p>'
-            $('#c_' + (i*10+j)).append(s)
-            $('#c_' + (i*10+j)).click(()=>{console.log(i, j)})
+            $('#c_' + (i*5+j)).text((i*5+j))
+            $('#b_' + (i*5+j)).click(()=>{guess(i, j)})
         }
-
-    $('#canva').mousedown(e=>{
-        if(player_type!=1)return
-        if(!drawing){
-            drawing = true
-            draw_cnt += 1
-            lines.push([e.offsetX, e.offsetY, draw_cnt])
-            cxt.moveTo(e.offsetX, e.offsetY)
-        }
-    })
-
-    $('#canva').mousemove(e=>{
-        if(player_type!=1)return
-        if(drawing){
-            lines.push([e.offsetX, e.offsetY, draw_cnt])
-            cxt.lineTo(e.offsetX, e.offsetY)
-            cxt.stroke()
-        }
-    })
-
-    $('#canva').mouseup(e=>{
-        // console.log(up_line, lines.length)
-        if(player_type!=1 || up_line>=lines.length) return
-        drawing = false
-        send({
-                'cmd' : 'up_line',
-                'uid' : player_id,
-                'lines' : lines.slice(up_line),
-            }, res=>{})
-        up_line = lines.length
-    })
 
     $('#link').click(()=>{
         server_url = 'http://' + $('#addr').val() + ':' + $('#port').val()
@@ -105,6 +74,40 @@ $(() => {
         })
     })
 
+    $('#hint').click(()=>{
+        if (playing==0) return
+        if (player_type!=hinter){
+            $('#info1').text('没轮到你给！')
+            return
+        }
+        if ($('#hint0').val().length<1 || $('#hint0').val().length>6){
+            $('#info1').text('长度不行！')
+            return
+        }
+        send({
+            'cmd' : 'hint',
+            'uid' : player_id,
+            'word': $('#hint0').val(),
+            'num' : +$('#hint1').val(),
+        }, res=>{
+            console.log(res)
+        })
+    })
+
+    $('#nomore').click(()=>{
+        if (playing==0) return
+        if (player_type==hinter){
+            $('#info1').text('没轮到你猜！')
+            return
+        }
+        send({
+            'cmd' : 'nomore',
+            'uid' : player_id,
+        }, res=>{
+            console.log(res)
+        })
+    })
+
     // hot keys
     $(window).on('keypress', function(e) {
         if (e.keyCode ===13) $('#speak').trigger('click')
@@ -128,7 +131,6 @@ heart_beat = ()=>{
         cd['beat'] = 0
         send({'cmd' : 'beat', 'uid' : player_id}, res=>{
             if(res.res=='ok'){
-                // $('#info0').text('成功连接')
                 beat_fail = 0
             }else{
                 $('#info0').text('连接失败')
@@ -162,43 +164,77 @@ ask_info = () =>{
     if (cd['info'] < 500) return
     cd['info'] = 0
     send({'cmd' : 'info', 'uid' : player_id}, res=>{
-        playing = res.playing
-        if (playing){
-            $('#info2').text('游戏已开始')
-        } else{
-            $('#info2').text('游戏未开始')
-        }
-
-        // redraw
-        if (draw_id!=res.draw_id){
-            lines = []
-            up_line = 0
-            draw_cnt = 0
-            draw_id = res.draw_id
-            // cxt.clearRect(0, 0, 10000, 10000)
-            c.width = c.width
-        }
-
-        // user info
-        $('#online-user').text(res.users)
-        $('#credit').text(res.coin)
-
         // new game
-        if (res.play_id != play_id){
-            play_id = res.play_id
-            if (player_id == res.painter) {
-                player_type = 1
-                $('#info0').text('你是画家')
-                $('#info1').text('题目: ' + res.answer)
-            }else{
-                player_type = 0
-                $('#info0').text('你是猜测者')
-                $('#info1').text('猜一个成语')
+        if (playing==0 && res.playing==1){
+            playing = res.playing
+            cards   = res.cards
+            green   = res.green
+            black   = res.black
+            player_type = res.type
+            grid    = res.grid.slice()
+            round   = res.round
+            rival   = res.rival
+            hinter  = res.hinter
+            console.log('sta:', grid)
+
+            for (let i=0; i<5; ++i) {
+                for(let j=0; j<5; ++j){
+                    let s = (i*5+j)
+                    $('#c_' + s).html(cards[i*5+j])
+                    $('#b_' + s).removeClass()
+                    $('#b_' + s).addClass('card')
+                }
+            }
+
+            for (let dot of green) {
+                let s = '#b_' + (dot[0]*5+dot[1])
+                console.log(dot)
+                $(s).addClass('card-yes')
+            }
+
+            for (let dot of black) {
+                let s = '#b_' + (dot[0]*5+dot[1])
+                $(s).addClass('card-no')
             }
         }
+        playing = res.playing
+        // playing
+        if (playing){
+            round   = res.round
+            hinter  = res.hinter
+            coin    = res.coin
+            $('#credit').text(coin)
+            $('#info0').text('回合：'+round)
+            $('#info1').text((player_type!=hinter)?'轮到你猜':'轮到你提示')
+            for (let i in res.grid) if (grid[i]!=res.grid[i]){
+                grid[i] = res.grid[i]
+                if (grid[i]==2 || grid[i]==4) {
+                    console.log(player_type+1, grid[i], grid[i]>>1)
+                    let tar = ((player_type+1)==(grid[i]>>1)) ? $('#nick').val() : rival
+                    $('#i_' + i).html($('#i_' + i).html() + tar + '猜错了<br>')
+                } else if (grid[i]==1 || grid[i]==3) {
+                    let tar = (player_type==(grid[i]>>1)) ? $('#nick').val() : rival
+                    $('#i_' + i).html($('#i_' + i).html() + tar + '猜对了<br>')
+                    $('#b_' + i).removeClass('card-yes card-no')
+                    $('#b_' + i).addClass('card-done')
+                }
+            }
+        }
+    })
+}
 
-        if (res.winner!=0){
-            $('#info1').text(res.win_name + ' 猜对了')
+guess = (x, y)=>{
+    if (playing==0) return
+    if (player_type==hinter){
+        $('#info1').text('没轮到你猜！')
+        return
+    }
+    console.log('Guess', x, y)
+    send({'cmd' : 'guess', 'uid' : player_id, 'pos' : [x, y]}, res=>{
+        if (res.res==1){
+            $('#info0').html('结束！')
+        } else if(res.res==2){
+            $('#info2').html('猜过了！')
         }
     })
 }
@@ -214,6 +250,4 @@ god = ()=>{
     // work
     ask_chat()
     ask_info()
-    if (player_type==0) ask_line()
-
 }

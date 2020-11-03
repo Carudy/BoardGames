@@ -9,6 +9,13 @@ class Base_handler(SimpleHTTPRequestHandler):
         # self.send_header('Content-type', 'text/plain')
         self.end_headers()
 
+    def log_message(self, format, *args):
+        return
+
+    # def do_GET(self):
+    #     self._set_response()
+    #     self.wfile.write("This is dy\'s game server.\n GET request for {}".format(self.path).encode('utf-8'))
+
     def do_POST(self):
         content_length = int(self.headers['Content-Length'])
         post_data = json.loads(self.rfile.read(content_length))
@@ -21,6 +28,7 @@ class Base_handler(SimpleHTTPRequestHandler):
     def run(self, data):
         print(data)
         return {"x" : 5}
+
 
 class Game_server():
     def __init__(self, handler_class, port=8080):

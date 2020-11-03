@@ -29,37 +29,50 @@ body {
     width: 100%;
     background: rgb(205, 201, 225);
     height: 650px;
+    padding-top: 1.5em;
 }
 
 #cards{
   width: 80%;
-  height: 100%;
+  height: auto;
 }
 
 #cards td{
-  padding: 8px;
-  text-align: center;
-  width: 5em;
-  height: 5em;
-  background: rgb(205, 195, 90);
-  color: blue;
-  font-weight: bolder;
+  font-size: 1.5em;
 }
 
 #cards td:hover{
   background: gold;
 }
 
+.card{
+  padding: 8px;
+  text-align: center;
+  width: 5em;
+  height: 4em;
+  background: rgb(205, 195, 90);
+  color: blue;
+  font-weight: bolder;
+}
+
 .card-yes{
   background: green;
+  color: linen;
 }
 
 .card-no{
   background: rgb(15, 16, 17);
+  color: linen;
 }
 
 .card-done{
-  background: red;
+  background: skyblue;
+}
+
+.cinfo{
+  font-size: 0.6em;
+  font-weight: normal;
+  font-style: italic;
 }
 
 #con{
