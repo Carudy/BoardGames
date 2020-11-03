@@ -15,7 +15,7 @@ var cards = [], green = [], black = [], grid = [], round = 0
 var rival = '', hinter = -1
 
 $(() => { 
-    $('#nick').val('You')
+    $('#nick').val('Alice')
     $('#addr').val(server_addr)
     $('#port').val(server_port)
     // $('#type').val(0)
@@ -42,7 +42,7 @@ $(() => {
                 'cmd' : 'reg',
                 'name' : $('#nick').val(),
             }, res=>{
-                $('#info0').text('成功连接')
+                $('#info0').text((res.uid==-1 ? '人满了'：res.uid==-2 ? '昵称重复' : '成功连接')
                 player_id = res.uid
                 beat_fail = 0
             })

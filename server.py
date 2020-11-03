@@ -17,7 +17,6 @@ class GBV():
         self.players  =  dd(lambda: None)
         self.chat     =  []
         self.playing  =  0
-        self.painter  =  0
         self.play_id  =  0 # game round
         self.words    =  list(filter(len, open('words').read().split(' ')))
         self.points   =  list(product(range(5), range(5)))
@@ -28,6 +27,7 @@ class GBV():
         self.ok             =  [0, 0]
         self.card_status    =  []
         self.hint     =  ['', 0]
+        self.gn       =  0
 
     @property
     def hinter(self):
@@ -59,6 +59,7 @@ class GBV():
     
     def add_player(self, data):
         if len(self.alives)>=2: return {'uid' : -1}
+        if data['name'] in self.alives_name: return {'uid' : -2}
         self.now += 1
         self.players[self.now] = Player(data['name'])
         print('New player: ', self.now, self.players[self.now].name)
@@ -150,41 +151,49 @@ class GBV():
          return sum([1 for pos in self.green[x] if self.card_status[pos[0]*5+pos[1]] in [1, 3]]) >= 9
 
     def nomore(self, uid):
-        if self.players[uid].type != self.hinter: return {'res' : 0}
-        if not self.hint[0]: return {'res' : 3}
+        if self.players[uid].type == self.hinter: return {'res' : 0}
+        if (not self.hint[0]) or (self.gn==0): return {'res' : 3}
         self.round += 1
+        self.gn = 0
         self.hint = ['', 0]
-        return {'res' : 0}
+        self.dy_say('{} 怂了，选择跳过'.format(self.players[uid].name))
+        return {'res' : 1}
 
     def guess(self, uid, pos):
         if self.players[uid].type == self.hinter: return {'res' : 0}
         if not self.hint[0]: return {'res' : 3}
         pos = (pos[0], pos[1])
         if pos in self.players[uid].guessed: return {'res' : 2}
+        self.gn += 1
         self.players[uid].guessed.add(pos)
         x = pos[0]*5 + pos[1]
         print('{} guess {}'.format(self.players[uid].name, self.cards[x]))
-        self.dy_say('{} 猜了： {}'.format(self.players[uid].name, self.cards[x]))
+        o_say = '{} 猜了：{}, '.format(self.players[uid].name, self.cards[x])
         t = self.players[uid].type ^ 1
 
         if pos in self.black[t]:
-            self.dy_say('黑牌！失败！')
+            self.dy_say(o_say + '是刺客！GG！')
             self.stop_game()
             return {'res' : 1}
 
         elif pos not in self.green[t]:
-            self.dy_say('猜错了！')
+            self.dy_say(o_say + '猜错了！')
             self.round += 1
+            self.gn = 0
+            if self.round>=9:
+                self.dy_say(o_say + '回合用尽！失败！')
+                self.stop_game()
+                return {'res' : 0}
             self.hint = ['', 0]
             self.card_status[x] = 2 if t else 4
             return {'res' : 0}
 
         else:
             self.card_status[x] = 1 if t else 3
-            self.dy_say('猜对了，可以继续猜！')
+            self.dy_say(o_say + '猜对了，可以继续猜！')
             self.coin += 1
             if self.coin>=15:
-                self.dy_say('胜利！')
+                self.dy_say(o_say + '胜利！')
                 self.stop_game()
                 return {'res' : 1}
             return {'res' : 0}
@@ -235,6 +244,7 @@ if __name__ == '__main__':
             users = G.alives
             for u in users:
                 print('{} : {}, ready:{}'.format(u, G.players[u].name, G.players[u].ready))
-        elif x=='p':
-            print('playing: {}, play_id: {}, painter: {}'.format(G.playing, G.play_id, G.painter))
-
+        elif x=='r':
+            for u in self.alives: G.players[u] = None
+            G.self.chat =  []
+            G.playing   =  0

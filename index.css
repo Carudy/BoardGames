@@ -27,7 +27,7 @@ body {
 
 #stage{
     width: 100%;
-    background: rgb(205, 201, 225);
+    background: rgb(51 49 36);
     height: 650px;
     padding-top: 1.5em;
 }
@@ -51,7 +51,7 @@ body {
   width: 5em;
   height: 4em;
   background: rgb(205, 195, 90);
-  color: blue;
+  color: #33267b;
   font-weight: bolder;
 }
 
@@ -136,7 +136,7 @@ info{
 }
 
 .inp-hint{
-  font-size: 1em;
+  font-size: 1.3em;
   width: 6em;
   background: rgb(240, 250, 240);
 }
@@ -160,4 +160,9 @@ info{
 
 #online-user{
   font-weight: bold;
+}
+
+#credit{
+  font-size: 1.3em;
+  color: #9b25b9;
 }
