@@ -4,6 +4,26 @@
     padding: 0 auto;
 }
 
+::-webkit-scrollbar
+{
+    width: 0.5em;
+    height: 0.5em;
+    background-color: #F5F5F5;    
+    border-radius: 0.4em;
+}
+
+::-webkit-scrollbar-track
+{
+    border-radius: 0.4em;
+    background-color: #9ea4ad;
+}
+
+::-webkit-scrollbar-thumb
+{
+    border-radius: 0.4em;
+    background-color: #231e0d;
+}
+
 body {
   font-family: '微软雅黑';
   background: rgb(235, 240, 245) 100% 100% no-repeat;
@@ -20,14 +40,15 @@ body {
 
 #infobar{
     width: 100%;
-    background: rgb(195, 210, 235);
-    height: 50px;
+    background: #252f40;
+    color: linen;
+    height: 3em;
     font-weight: bolder;
 }
 
 #stage{
     width: 100%;
-    background: rgb(51 49 36);
+    background: rgb(39, 39, 39);
     height: 650px;
     padding-top: 1.5em;
 }
@@ -42,7 +63,7 @@ body {
 }
 
 #cards td:hover{
-  background: gold;
+  background: #f7a056;
 }
 
 .card{
@@ -50,7 +71,7 @@ body {
   text-align: center;
   width: 5em;
   height: 4em;
-  background: rgb(205, 195, 90);
+  background: #ececbd;
   color: #33267b;
   font-weight: bolder;
 }
@@ -116,6 +137,11 @@ info{
   word-wrap:break-word; 
   word-break:break-all; 
   background: rgb(50, 50, 50);
+}
+
+.chat_box_sys{
+  color: darkorange;
+  font-weight: bolder;
 }
 
 #chat_board{

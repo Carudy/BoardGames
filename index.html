@@ -9,8 +9,8 @@
 <body>
     <div id="bk">
         <div id="infobar">
-            <info id="info0">Codenames</info>
-            <info id="info1">Duet</info>
+            <info id="info0">行动代号</info>
+            <info id="info1">二重奏</info>
             <info id="info2">！</info>
         </div>
         <div id="stage">
@@ -25,7 +25,10 @@
                 <tr> <td>端口：</td>  <td><input  id="port" class="inp" type="text"> <button id="link">连接</button></td> </tr>
                 <!-- <tr> <td>tp：</td><td><input  id="type" class="inp" type="text"></td> </tr> -->
                 <tr>
-                    <td colspan="2"> <i style="color: brown">改昵称，先连接，后开始</i> </td>
+                    <td colspan="2"> <i style="color: brown">改昵称，先连接，再准备；</i> </td>
+                </tr>
+                <tr>
+                    <td colspan="2"> <i style="color: brown">该页面请拖出来单独占用浏览器，否则切换tab容易导致失联；</i> </td>
                 </tr>
             </table>
 
@@ -45,17 +48,17 @@
                     <td> <button class="pad" id="hint">给出提示</button> </td>  
                     <td> <button class="pad" id="nomore"> 不猜了 </button> </td> 
                 </tr>
-
-                <!-- <tr id="onlines">
-                    <td colspan="3">当前在线： <p id="online-user"></p> </td>
-                </tr> -->
+                <ul>
+                    <tr><td colspan="3"> <li><i> 提示词不能包含给出词牌中的字；  </i></li></td></tr>
+                    <tr><td colspan="3"> <li><i> 提示词不能为谐音梗或坐标等信息；</i></li></td></tr>
+                </ul>
             </table>
 
             <div class="block" id="chat">
                 <div id="chat_board">
                 </div>
                 <div id="say">
-                    <input id="speech" type="text"/> <button id="speak">发送</button>
+                    <input id="speech" type="text"/> <button id="speak">发送(回车)</button>
                 </div>
             </div>            
         </div>

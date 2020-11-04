@@ -18,7 +18,8 @@ class GBV():
         self.chat     =  []
         self.playing  =  0
         self.play_id  =  0 # game round
-        self.words    =  list(filter(len, open('words').read().split(' ')))
+        self.words    =  list(set(filter(len, open('words').read().split(' '))))
+        print('Word number: ' + str(len(self.words)))
         self.points   =  list(product(range(5), range(5)))
         self.coin     =  self.round = 0
         self.cards          =  []
@@ -71,7 +72,7 @@ class GBV():
         return {'res' : 0}
 
     def dy_say(self, cont):
-        self.chat.append(('系统', cont))
+        self.chat.append(('', cont))
 
     def ask_say(self, x):
         if x>=len(self.chat): return {'n' : 0}
@@ -124,10 +125,10 @@ class GBV():
             self.green = [self.points[:9], self.points[6:15]]
             self.black = [random.sample(self.points[9:], 3), random.sample(self.points[:6]+self.points[15:], 3)]
             self.card_status = [0] * 25
-            print(self.ab)
-            print(self.cards)            
-            print(self.green)            
-            print(self.black)
+            # print(self.ab)
+            # print(self.cards)            
+            # print(self.green)            
+            # print(self.black)
 
     def stop_game(self):
         self.playing = self.coin = 0
@@ -195,7 +196,7 @@ class GBV():
             if self.coin>=15:
                 self.dy_say(o_say + '胜利！')
                 self.stop_game()
-                return {'res' : 1}
+                return {'res' : 9}
             return {'res' : 0}
 
 
@@ -245,6 +246,8 @@ if __name__ == '__main__':
             for u in users:
                 print('{} : {}, ready:{}'.format(u, G.players[u].name, G.players[u].ready))
         elif x=='r':
-            for u in self.alives: G.players[u] = None
-            G.self.chat =  []
+            for u in G.alives: G.players[u] = None
             G.playing   =  0
+        elif x=='p':
+            for u in G.alives: 
+                print('{} : {}'.format(G.players[u].name, G.players[u].beat))

@@ -1,4 +1,4 @@
-const server_addr = '192.168.195.162'
+const server_addr = window.location.hostname || '192.168.195.162'
 const server_port = '6969'
 var   server_url = 'http://' + server_addr + ':' + server_port
 var   ter = 100
@@ -12,7 +12,7 @@ var player_id = 0, player_type = 0, play_id = 0, playing = 0
 var chat_id = 0
 
 var cards = [], green = [], black = [], grid = [], round = 0
-var rival = '', hinter = -1
+var rival = '', hinter = -1, moji = ''
 
 $(() => { 
     $('#nick').val('Alice')
@@ -42,7 +42,7 @@ $(() => {
                 'cmd' : 'reg',
                 'name' : $('#nick').val(),
             }, res=>{
-                $('#info0').text((res.uid==-1 ? '人满了'：res.uid==-2 ? '昵称重复' : '成功连接')
+                $('#info0').text(res.uid==-1 ? '人满了':(res.uid==-2 ? '昵称重复' : '成功连接'))
                 player_id = res.uid
                 beat_fail = 0
             })
@@ -77,20 +77,30 @@ $(() => {
     $('#hint').click(()=>{
         if (playing==0) return
         if (player_type!=hinter){
-            $('#info1').text('没轮到你给！')
+            $('#info2').text('没轮到你给！')
             return
         }
         if ($('#hint0').val().length<1 || $('#hint0').val().length>6){
-            $('#info1').text('长度不行！')
+            $('#info2').text('长度不行！')
             return
         }
+
+        keyword = $('#hint0').val()
+        for (let ji of keyword){
+            if (moji.indexOf(ji)!=-1){
+                $('#info2').text('包含词中字！')
+                return
+            }
+        }
+
         send({
             'cmd' : 'hint',
             'uid' : player_id,
             'word': $('#hint0').val(),
             'num' : +$('#hint1').val(),
         }, res=>{
-            console.log(res)
+            $('#hint0').val('')
+            $('#hint1').val('')
         })
     })
 
@@ -104,7 +114,6 @@ $(() => {
             'cmd' : 'nomore',
             'uid' : player_id,
         }, res=>{
-            console.log(res)
         })
     })
 
@@ -150,8 +159,16 @@ ask_chat = ()=>{
     send({'cmd' : 'ask_chat', 'from' : chat_id}, res=>{
         if(res.n>0){
             for (i in res.data) {
-                let cont = res.data[i][0] + ': ' + res.data[i][1]  
-                cont = '<div class="chat_box">' + cont + '</div>'              
+                let cont = ''
+                if (res.data[i][0]){
+                    console.log('A')
+                    cont = res.data[i][0] + ': ' + res.data[i][1]
+                    cont = '<div class="chat_box">' + cont + '</div>'
+                } else{
+                    console.log('B')
+                    cont = res.data[i][1]
+                    cont = '<div class="chat_box chat_box_sys">' + cont + '</div>'
+                }
                 $('#chat_board').html($('#chat_board').html() + cont)
             }
             chat_id += res.n
@@ -175,7 +192,7 @@ ask_info = () =>{
             round   = res.round
             rival   = res.rival
             hinter  = res.hinter
-            console.log('sta:', grid)
+            $('#chat_board').html('')
 
             for (let i=0; i<5; ++i) {
                 for(let j=0; j<5; ++j){
@@ -183,18 +200,23 @@ ask_info = () =>{
                     $('#c_' + s).html(cards[i*5+j])
                     $('#b_' + s).removeClass()
                     $('#b_' + s).addClass('card')
+                    $('#i_' + s).html('')
                 }
             }
 
             for (let dot of green) {
                 let s = '#b_' + (dot[0]*5+dot[1])
-                console.log(dot)
                 $(s).addClass('card-yes')
             }
 
             for (let dot of black) {
                 let s = '#b_' + (dot[0]*5+dot[1])
                 $(s).addClass('card-no')
+            }
+
+            moji = ''
+            for (let word of cards){
+                moji += word
             }
         }
         playing = res.playing
@@ -209,7 +231,6 @@ ask_info = () =>{
             for (let i in res.grid) if (grid[i]!=res.grid[i]){
                 grid[i] = res.grid[i]
                 if (grid[i]==2 || grid[i]==4) {
-                    console.log(player_type+1, grid[i], grid[i]>>1)
                     let tar = ((player_type+1)==(grid[i]>>1)) ? $('#nick').val() : rival
                     $('#i_' + i).html($('#i_' + i).html() + tar + '猜错了<br>')
                 } else if (grid[i]==1 || grid[i]==3) {
@@ -232,9 +253,13 @@ guess = (x, y)=>{
     console.log('Guess', x, y)
     send({'cmd' : 'guess', 'uid' : player_id, 'pos' : [x, y]}, res=>{
         if (res.res==1){
-            $('#info0').html('结束！')
+            $('#info0').html('结束，按准备继续')
+            alert('GG！')
         } else if(res.res==2){
             $('#info2').html('猜过了！')
+        } else if(res.res==2){
+            $('#info0').html('胜利，按准备继续')
+            alert('胜利！')
         }
     })
 }
