@@ -135,20 +135,19 @@ send = (data, callback)=>{
 
 heart_beat = ()=>{
     if (player_id==0) return
-    if (cd['beat'] >= 2000) {
+    if (cd['beat'] >= 1500) {
         beat_fail += 1
         cd['beat'] = 0
         send({'cmd' : 'beat', 'uid' : player_id}, res=>{
             if(res.res=='ok'){
                 beat_fail = 0
             }else{
-                $('#info0').text('连接失败')
-                player_id = 0
-                player_type = 0
+                $('#info0').text('暂时连接失败')
+                // player_id = 0
             }
         })
     }
-    if(beat_fail>1){
+    if(beat_fail>6){
         $('#info0').text('连接失败')
     }
 }
@@ -161,11 +160,9 @@ ask_chat = ()=>{
             for (i in res.data) {
                 let cont = ''
                 if (res.data[i][0]){
-                    console.log('A')
                     cont = res.data[i][0] + ': ' + res.data[i][1]
                     cont = '<div class="chat_box">' + cont + '</div>'
                 } else{
-                    console.log('B')
                     cont = res.data[i][1]
                     cont = '<div class="chat_box chat_box_sys">' + cont + '</div>'
                 }

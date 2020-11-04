@@ -48,8 +48,8 @@ class GBV():
     def clean(self):
         ima = time.time()
         for u in self.players:
-            if self.players[u] and (abs(ima - self.players[u].beat) > 8):
-                print('Die: {}, {}; beat: {}, {}'.format(u, self.players[u].name, ima, self.players[u].beat))
+            if self.players[u] and (abs(ima - self.players[u].beat) > 24):
+                print('Die: {}, {}; beat: {}'.format(u, self.players[u].name, abs(ima - self.players[u].beat)))
                 self.players[u] = None
 
     def beat(self, uid):
