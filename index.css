@@ -58,6 +58,13 @@ body {
   height: auto;
 }
 
+#hinted{
+  width: 80%;
+  color: linen;
+  font-size: 1.2em;
+  margin-top: 0.5em;
+}
+
 #cards td{
   font-size: 1.4em;
 }

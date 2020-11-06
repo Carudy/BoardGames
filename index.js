@@ -89,7 +89,7 @@ $(() => {
         keyword = $('#hint0').val()
         for (let ji of keyword){
             if (moji.indexOf(ji)!=-1){
-                $('#info2').text('包含词中字！')
+                $('#info2').text('包含词中字：' + ji)
                 return
             }
         }
@@ -224,6 +224,8 @@ ask_info = () =>{
             round   = res.round
             hinter  = res.hinter
             coin    = res.coin
+            console.log(res.hints)
+            $('#hinted').text(res.hints)
             $('#credit').text(coin)
             $('#info0').text('回合：'+ (round+1) + '/9')
             $('#info1').text((player_type!=hinter)?'轮到你猜':'轮到你提示')

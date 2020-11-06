@@ -29,6 +29,7 @@ class GBV():
         self.card_status    =  []
         self.hint     =  ['', 0]
         self.gn       =  0
+        self.hints = []
 
     @property
     def hinter(self):
@@ -97,6 +98,7 @@ class GBV():
                 'black'     :   self.black[self.players[uid].type],
                 'grid'      :   self.card_status,
                 'rival'     :   self.players[rival].name,
+                'hints'     :   '；  '.join(':'.join(i) for i in self.hints),
             } 
         return {
             'playing'   :   self.playing,
@@ -145,6 +147,7 @@ class GBV():
     def give_hint(self, uid, word, num):
         if self.players[uid].type != self.hinter: return {'res' : 0}
         self.hint = [word, num]
+        self.hints.append([word, str(num)])
         self.dy_say('{} 给了提示： {}, {}'.format(self.players[uid].name, word, num))
         print('{} 提示： {}, {}'.format(self.players[uid].name, word, num))
         return {'res' : 0}
@@ -248,7 +251,9 @@ if __name__ == '__main__':
                 print('{} : {}, ready:{}'.format(u, G.players[u].name, G.players[u].ready))
         elif x=='r':
             for u in G.alives: G.players[u] = None
+            G.stop_game()
             G.playing   =  0
+            G.coin   =  G.round = 0
         elif x=='p':
             for u in G.alives: 
                 print('{} : {}'.format(G.players[u].name, G.players[u].beat))
