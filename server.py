@@ -146,6 +146,7 @@ class GBV():
         if self.players[uid].type != self.hinter: return {'res' : 0}
         self.hint = [word, num]
         self.dy_say('{} 给了提示： {}, {}'.format(self.players[uid].name, word, num))
+        print('{} 提示： {}, {}'.format(self.players[uid].name, word, num))
         return {'res' : 0}
 
     def check_done(self, x):

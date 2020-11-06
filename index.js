@@ -37,6 +37,7 @@ $(() => {
         }
 
     $('#link').click(()=>{
+        if (player_id) return
         server_url = 'http://' + $('#addr').val() + ':' + $('#port').val()
         send({
                 'cmd' : 'reg',
@@ -80,7 +81,7 @@ $(() => {
             $('#info2').text('没轮到你给！')
             return
         }
-        if ($('#hint0').val().length<1 || $('#hint0').val().length>6){
+        if ($('#hint0').val().length<1 || $('#hint0').val().length>8){
             $('#info2').text('长度不行！')
             return
         }
@@ -149,6 +150,7 @@ heart_beat = ()=>{
     }
     if(beat_fail>6){
         $('#info0').text('连接失败')
+        player_id = 0
     }
 }
 
@@ -223,7 +225,7 @@ ask_info = () =>{
             hinter  = res.hinter
             coin    = res.coin
             $('#credit').text(coin)
-            $('#info0').text('回合：'+round)
+            $('#info0').text('回合：'+ (round+1) + '/9')
             $('#info1').text((player_type!=hinter)?'轮到你猜':'轮到你提示')
             for (let i in res.grid) if (grid[i]!=res.grid[i]){
                 grid[i] = res.grid[i]
