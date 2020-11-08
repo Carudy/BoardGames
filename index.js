@@ -191,6 +191,7 @@ ask_info = () =>{
             round   = res.round
             rival   = res.rival
             hinter  = res.hinter
+            $('#hinted').text('')
             $('#chat_board').html('')
 
             for (let i=0; i<5; ++i) {
@@ -224,7 +225,7 @@ ask_info = () =>{
             round   = res.round
             hinter  = res.hinter
             coin    = res.coin
-            console.log(res.hints)
+            // console.log(res.hints)
             $('#hinted').text(res.hints)
             $('#credit').text(coin)
             $('#info0').text('回合：'+ (round+1) + '/9')

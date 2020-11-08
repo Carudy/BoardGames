@@ -19,6 +19,7 @@ class GBV():
         self.playing  =  0
         self.play_id  =  0 # game round
         self.words    =  list(set(filter(len, open('words').read().split(' '))))
+        random.shuffle(self.words)
         print('Word number: ' + str(len(self.words)))
         self.points   =  list(product(range(5), range(5)))
         self.coin     =  self.round = 0
@@ -121,8 +122,12 @@ class GBV():
             self.players[users[1]].guessed = set()
             self.round = 0
             self.ok = [0, 0]
+            self.hints = []
             # cards
-            self.cards = random.sample(self.words, 25)
+            t0, t1 = self.words[:25], self.words[25:]
+            random.shuffle(t1)
+            self.words = t1 + t0
+            self.cards = self.words[:25]
             random.shuffle(self.points)
             self.green = [self.points[:9], self.points[6:15]]
             self.black = [random.sample(self.points[9:], 3), random.sample(self.points[:6]+self.points[15:], 3)]
