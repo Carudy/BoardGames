@@ -1,0 +1,201 @@
+*{
+    font-size: 1em;
+    margin: 0 auto;
+    padding: 0 auto;
+}
+
+::-webkit-scrollbar
+{
+    width: 0.5em;
+    height: 0.5em;
+    background-color: #F5F5F5;    
+    border-radius: 0.4em;
+}
+
+::-webkit-scrollbar-track
+{
+    border-radius: 0.4em;
+    background-color: #9ea4ad;
+}
+
+::-webkit-scrollbar-thumb
+{
+    border-radius: 0.4em;
+    background-color: #231e0d;
+}
+
+body {
+  font-family: '微软雅黑';
+  background: rgb(235, 240, 245) 100% 100% no-repeat;
+  padding: 2px;
+  text-align: center;
+}
+
+#bk{
+    background: rgb(200, 200, 200);
+    text-align: left;
+    width: 1300px;
+    height: 900px;
+}
+
+#infobar{
+    width: 100%;
+    background: #252f40;
+    color: linen;
+    height: 3em;
+    font-weight: bolder;
+}
+
+#stage{
+    width: 100%;
+    background: rgb(39, 39, 39);
+    height: 650px;
+    padding-top: 1.5em;
+}
+
+#cards{
+  width: 80%;
+  height: auto;
+}
+
+#hinted{
+  width: 80%;
+  color: linen;
+  font-size: 1.2em;
+  margin-top: 0.5em;
+}
+
+#cards td{
+  font-size: 1.4em;
+}
+
+#cards td:hover{
+  background: #f7a056;
+}
+
+.card{
+  padding: 8px;
+  text-align: center;
+  width: 5em;
+  height: 4em;
+  background: #ececbd;
+  color: #33267b;
+  font-weight: bolder;
+}
+
+.card-yes{
+  background: green;
+  color: linen;
+}
+
+.card-no{
+  background: rgb(15, 16, 17);
+  color: linen;
+}
+
+.card-done{
+  background: skyblue;
+}
+
+.cinfo{
+  font-size: 0.6em;
+  font-weight: normal;
+  font-style: italic;
+}
+
+#con{
+    width: 100%;
+    background: rgb(220, 210, 165);
+    height: 200px;
+}
+
+info{
+  display: inline-block;
+  margin-top: 0.5em;
+  margin-left: 3em;
+  font-size: 1.3em;
+  width: 15em;
+}
+
+.block{
+  margin-left: 1em;
+  margin-bottom: 0.5em;
+  display: inline-block;
+}
+
+#net{
+  width: 20em;
+  float: left;
+}
+
+#chat{
+  background: rgb(60, 60, 60);
+  width: 25em;
+  height: 100%;
+  float: right;
+  color: rgb(222, 223, 232);
+}
+
+.chat_box{
+  margin-left: 0.5em;
+  margin-top: 0.5em;
+  font-weight: bold;
+  width: 90%;
+  word-wrap:break-word; 
+  word-break:break-all; 
+  /*background: rgb(50, 50, 50);*/
+}
+
+.chat_box_sys{
+  color: darkorange;
+  font-weight: bolder;
+}
+
+#chat_board{
+  overflow: auto;
+  height: 80%;
+}
+
+#say{
+  height: 20%;
+  margin-left: 1em;
+  margin-top: 0.5em;
+}
+
+.inp{
+  font-size: 1em;
+  width: 10em;
+  background: rgb(240, 230, 240);
+}
+
+.inp-hint{
+  font-size: 1.3em;
+  width: 6em;
+  background: rgb(240, 250, 240);
+}
+
+#speech{
+  width: 16em;
+}
+
+.pad{
+  font-size: 1.3em;
+}
+
+#tar{
+  font-size: 1.5em;
+}
+
+#onlines{
+  color: grey;
+  font-style: italic;
+}
+
+#online-user{
+  font-weight: bold;
+}
+
+#credit{
+  font-size: 1.3em;
+  color: #9b25b9;
+}

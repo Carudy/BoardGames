@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>科研</title>
+<!--    <link rel="stylesheet" href="{{ url_for('static', filename='semantic.min.css') }}" type="text/css">-->
+	<link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}" type="text/css">
+</head>
+<body>
+    <div id="bk">
+        <div id="infobar">
+            <info id="info0">行动代号</info>
+            <info id="info1">二重奏</info>
+            <info id="info2">！</info>
+        </div>
+        <div id="stage">
+            <!-- <canvas id="canva" width="1300" height="650"></canvas> -->
+            <table id="cards">
+            </table>
+            <div id="hinted"> </div>
+        </div>
+        <div id="con">
+            <table class="block" id="net">
+                <tr> <td>昵称：</td>  <td><input  id="nick" class="inp" type="text"></td> </tr>
+                <tr> <td>服务器：</td><td><input  id="addr" class="inp" type="text"></td> </tr>
+                <tr> <td>端口：</td>  <td><input  id="port" class="inp" type="text"> <button id="link">连接</button></td> </tr>
+                <!-- <tr> <td>tp：</td><td><input  id="type" class="inp" type="text"></td> </tr> -->
+                <tr>
+                    <td colspan="2"> <i style="color: brown">改昵称，先连接，再准备；</i> </td>
+                </tr>
+                <tr>
+                    <td colspan="2"> <i style="color: brown">该页面请拖出来单独占用浏览器，否则切换tab容易导致失联；</i> </td>
+                </tr>
+            </table>
+
+            <table class="block" id="ctrl">
+                <tr> 
+                    <td> <button class="pad" id="ready"> 准备好了 </button> </td> 
+                </tr>
+
+                <tr>
+                    <td>已猜对：</td>
+                    <td> <p id="credit" class="pad">0</p> </td>
+                </tr>
+
+                <tr>
+                    <td> <input  id="hint0" class="inp-hint" type="text" placeholder="关键词"></td> </td>  
+                    <td> <input  id="hint1" class="inp-hint" type="text" placeholder="数字"></td> </td>  
+                    <td> <button class="pad" id="hint">给出提示</button> </td>  
+                    <td> <button class="pad" id="nomore"> 不猜了 </button> </td> 
+                </tr>
+                <ul>
+                    <tr><td colspan="3"> <li><i> 提示词不能包含给出词牌中的字；  </i></li></td></tr>
+                    <tr><td colspan="3"> <li><i> 提示词不能为谐音梗或坐标等信息；</i></li></td></tr>
+                </ul>
+            </table>
+
+            <div class="block" id="chat">
+                <div id="chat_board">
+                </div>
+                <div id="say">
+                    <input id="speech" type="text"/> <button id="speak">发送(回车)</button>
+                </div>
+            </div>            
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="{{ url_for('static', filename='jquery-3.6.0.min.js') }}"></script>
+<!--<script type="text/javascript" src="{{ url_for('static', filename='semantic.min.js') }}"></script>-->
+<script type="text/javascript" src="{{ url_for('static', filename='index.js') }}"></script>
+</html>
