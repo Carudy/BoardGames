@@ -6,6 +6,7 @@ from game import GameRoom
 app = Flask(__name__)
 G = GameRoom()
 
+
 @app.route('/')
 def main():
     return render_template('duet.html')
@@ -14,12 +15,12 @@ def main():
 @app.route('/', methods=['POST'])
 def work():
     if 'data' not in request.form:
-        return None
+        return {}
     data = json.loads(request.form['data'])
     if 'cmd' not in data or 'game_name' not in data or data['game_name'] != 'duet':
-        return None
+        return {}
     if 'uid' in data and (G.players[data['uid']] is None):
-        return None
+        return {}
     if data['cmd'] == 'reg':
         return G.add_player(data)
 

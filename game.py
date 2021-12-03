@@ -1,5 +1,6 @@
-from collections import defaultdict as dd
-import time, random
+from collections import defaultdict
+import time
+import random
 from itertools import product
 
 
@@ -16,11 +17,11 @@ class Player:
 class GameRoom:
     def __init__(self):
         self.now = 0
-        self.players = dd(lambda: None)
+        self.players = defaultdict(lambda: None)
         self.chat = []
         self.playing = 0
         self.n_round = 0  # game round
-        self.words = list(set(filter(len, open('words').read().split(' '))))
+        self.words = list(set(filter(len, open('words', encoding='utf-8').read().split(' '))))
         random.shuffle(self.words)
         self.points = list(product(range(5), range(5)))
         self.coin = self.round = 0
@@ -213,4 +214,4 @@ class GameRoom:
 class Lobby:
     def __init__(self):
         self.rooms = []
-        self.players = dd(lambda: None)
+        self.players = defaultdict(lambda: None)

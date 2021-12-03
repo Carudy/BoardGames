@@ -1,7 +1,7 @@
 const server_addr = window.location.hostname || '192.168.195.162'
 const server_port = '6969'
-var   server_url = 'http://' + server_addr + ':' + server_port
-var   ter = 100
+var server_url = 'http://' + server_addr + ':' + server_port
+var ter = 100
 var cd = {
         'beat' : 0,
         'chat' : 0,
@@ -13,6 +13,13 @@ var chat_id = 0
 
 var cards = [], green = [], black = [], grid = [], round = 0
 var rival = '', hinter = -1, moji = ''
+
+send = (data, callback)=>{
+    data['game_name'] = 'duet'
+    $.post('/', {'data': JSON.stringify(data)}, (res)=>{
+        callback(res)
+    })
+}
 
 $(() => { 
     $('#nick').val('Alice')
@@ -119,22 +126,15 @@ $(() => {
     })
 
     // hot keys
-    $(window).on('keypress', function(e) {
-        if (e.keyCode ===13) $('#speak').trigger('click')
-    })
+    $(window).on('keypress', function(e) {
+        if (e.keyCode ===13) $('#speak').trigger('click')
+    })
 
     setInterval(god, ter)
 })
 
 
-//************************************************************* 
-send = (data, callback)=>{
-    data['game_name'] = 'duet'
-    $.post('/', {'data': JSON.stringify(data)}, (res)=>{
-        callback(res)
-    })
-}
-
+//*************************************************************
 heart_beat = ()=>{
     if (player_id==0) return
     if (cd['beat'] >= 1500) {
@@ -145,7 +145,6 @@ heart_beat = ()=>{
                 beat_fail = 0
             }else{
                 $('#info0').text('暂时连接失败')
-                // player_id = 0
             }
         })
     }

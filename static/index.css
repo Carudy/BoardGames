@@ -4,6 +4,21 @@
     padding: 0 auto;
 }
 
+button{
+    margin-bottom: 3px;
+}
+
+#login input{
+    width: 80%;
+    margin-bottom: 3px;
+}
+
+#login{
+    background: rgb(33, 44, 55);
+    text-align: center;
+    color: linen;
+}
+
 ::-webkit-scrollbar
 {
     width: 0.5em;
@@ -24,22 +39,8 @@
     background-color: #231e0d;
 }
 
-body {
-  font-family: '微软雅黑';
-  background: rgb(235, 240, 245) 100% 100% no-repeat;
-  padding: 2px;
-  text-align: center;
-}
-
-#bk{
-    background: rgb(200, 200, 200);
-    text-align: left;
-    width: 1300px;
-    height: 900px;
-}
-
 #infobar{
-    width: 100%;
+    padding: 2px;
     background: #252f40;
     color: linen;
     height: 3em;
@@ -47,26 +48,18 @@ body {
 }
 
 #stage{
-    width: 100%;
     background: rgb(39, 39, 39);
-    height: 650px;
-    padding-top: 1.5em;
+    height: auto;
+    padding-top: 2em;
 }
 
 #cards{
-  width: 80%;
+  width: 95%;
   height: auto;
 }
 
-#hinted{
-  width: 80%;
-  color: linen;
-  font-size: 1.2em;
-  margin-top: 0.5em;
-}
-
 #cards td{
-  font-size: 1.4em;
+  font-size: 1.2em;
 }
 
 #cards td:hover{
@@ -103,36 +96,17 @@ body {
   font-style: italic;
 }
 
+#hinted{
+    color: linen;
+}
+
 #con{
-    width: 100%;
-    background: rgb(220, 210, 165);
-    height: 200px;
-}
-
-info{
-  display: inline-block;
-  margin-top: 0.5em;
-  margin-left: 3em;
-  font-size: 1.3em;
-  width: 15em;
-}
-
-.block{
-  margin-left: 1em;
-  margin-bottom: 0.5em;
-  display: inline-block;
-}
-
-#net{
-  width: 20em;
-  float: left;
+    background: rgb(54, 64, 73);
+    color: linen;
 }
 
 #chat{
-  background: rgb(60, 60, 60);
-  width: 25em;
-  height: 100%;
-  float: right;
+  background: rgb(54, 64, 73);
   color: rgb(222, 223, 232);
 }
 
@@ -140,10 +114,8 @@ info{
   margin-left: 0.5em;
   margin-top: 0.5em;
   font-weight: bold;
-  width: 90%;
-  word-wrap:break-word; 
+  word-wrap:break-word;
   word-break:break-all; 
-  /*background: rgb(50, 50, 50);*/
 }
 
 .chat_box_sys{
@@ -153,46 +125,14 @@ info{
 
 #chat_board{
   overflow: auto;
-  height: 80%;
+  min-height: 80%;
+  max-height: 80%;
 }
 
 #say{
-  height: 20%;
-  margin-left: 1em;
+  height: 18%;
   margin-top: 0.5em;
-}
-
-.inp{
-  font-size: 1em;
-  width: 10em;
-  background: rgb(240, 230, 240);
-}
-
-.inp-hint{
-  font-size: 1.3em;
-  width: 6em;
-  background: rgb(240, 250, 240);
-}
-
-#speech{
-  width: 16em;
-}
-
-.pad{
-  font-size: 1.3em;
-}
-
-#tar{
-  font-size: 1.5em;
-}
-
-#onlines{
-  color: grey;
-  font-style: italic;
-}
-
-#online-user{
-  font-weight: bold;
+  text-align: center;
 }
 
 #credit{
