@@ -82,7 +82,7 @@ button{
   padding: 8px;
   text-align: center;
   width: 5em;
-  height: 4em;
+  height: 5em;
   background: #ececbd;
   color: #33267b;
   font-weight: bolder;
@@ -138,8 +138,8 @@ button{
 
 #chat_board{
   overflow: auto;
-  min-height: 30em;
-  max-height: 30em;
+  min-height: 35em;
+  max-height: 35em;
 }
 
 #say{

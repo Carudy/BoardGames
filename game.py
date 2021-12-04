@@ -65,8 +65,16 @@ class GameRoom:
         return {'code': 0}
 
     def add_say(self, data):
+        if len(self.chat) > 1000:
+            self.chat = []
+            self.dy_say(u'聊天记录过多，已清理')
         print('Add speak: ', self.get_player(data['uid']).name, data['cont'])
         self.chat.append((self.get_player(data['uid']).name, data['cont']))
+        return {'res': 0}
+
+    def add_say_shit(self, data):
+        quick_word = random.choice(['搓手顿脚', '抓耳挠腮', '心烦意燥', '五内如焚', '腹热心煎', '心焦火燎', '以日为年'])
+        self.dy_say(f'GKD! {self.get_player(data["uid"]).name}已经等得{quick_word}了！')
         return {'res': 0}
 
     def dy_say(self, cont):
@@ -179,14 +187,14 @@ class GameRoom:
         x = pos[0] * 5 + pos[1]
         print(f'{self.get_player(data["uid"]).name} guess {self.cards[x]}')
         o_say = f'{self.get_player(data["uid"]).name} 猜了：{self.cards[x]}, '
-        t = self.get_player(data["uid"]).type ^ 1
+        rival = self.get_player(data["uid"]).type ^ 1
 
-        if pos in self.black[t]:
+        if pos in self.black[rival]:
             self.dy_say(o_say + '是刺客！GG！')
             self.stop_game()
             return {'res': 1}
 
-        elif pos not in self.green[t]:
+        elif pos not in self.green[rival]:
             self.dy_say(o_say + '猜错了！')
             self.round += 1
             self.gn = 0
@@ -195,11 +203,11 @@ class GameRoom:
                 self.stop_game()
                 return {'res': 0}
             self.hint = ['', 0]
-            self.card_status[x] = 2 if t else 4
+            self.card_status[x] = 2 if rival else 4
             return {'res': 0}
 
         else:
-            self.card_status[x] = 1 if t else 3
+            self.card_status[x] = 1 if rival else 3
             self.dy_say(o_say + '猜对了，可以继续猜！')
             self.coin += 1
             if self.coin >= 15:
@@ -216,10 +224,13 @@ class Lobby:
         self.basepath = Path(os.path.dirname(__file__))
         self.accounts = eval((self.basepath / 'static/users').open(encoding='utf-8').read())
         for stu in ['wanghao', 'zhouteng', 'zhaozhixin', 'zhouwenjie', 'jinzikang', 'dengzihao', 'liuyan', 'lizhicheng',
-                    'yinchangchun', 'shiyundi', 'wuxiaofei']:
+                    'yinchangchun', 'shiyundi', 'wuxiaofei', 'wangshenqing', 'wangluyao', 'yanghao', 'wuweibin',
+                    'jiaoruohong', 'yangjingxiu', 'zhangjingtang', 'hesihan', 'guoxin', 'niuyuqing', 'zhangwen',
+                    'luosinian', 'dongweiliang']:
             self.accounts[stu] = stu
         self.cmd_dict = {
             'say': 'add_say',
+            'say_shit': 'add_say_shit',
             'ask_chat': 'ask_say',
             'info': 'ask_info',
             'guess': 'guess',
@@ -264,6 +275,8 @@ class Lobby:
         return self.rooms[data['rid']].player_ready(data)
 
     def room_action(self, data):
+        if 'uid' not in data:
+            return {'code': 1}
         if self.rooms[data['rid']] is None or data['uid'] not in self.rooms[data['rid']].inroom:
             return {'code': 1, 'msg': 'wrong room'}
         return getattr(self.rooms[data['rid']], self.cmd_dict[data['cmd']])(data)

@@ -1,7 +1,7 @@
 ## Codename duet LAN
 
-- Server side: python
-- UI: html + css + js
+- Server side: python + flask
+- UI: chota.css
 
 ## How to play
 
@@ -9,11 +9,7 @@
 
 2. One of you run the server:
 ```
-python server.py
+python index.py
 ```
 
 3. Both vist "server_ip:6969" then "link & ready".
-
-## WAN play
-
-Zerotier is enabled.

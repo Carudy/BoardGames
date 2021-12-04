@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>科研</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='chota.min.css') }}" type="text/css">
@@ -26,9 +26,9 @@
         <button id="ready" class="button dark"> 准备</button>
         <br>
         <br>
-        <p style="color: brown">改昵称</p>
-        <p style="color: brown">先连接</p>
-        <p style="color: brown">再准备</p>
+        <p style="color: brown">先连接，用户名密码都是姓名的拼音</p>
+        <p style="color: brown">改昵称，和小伙伴协商房间号</p>
+        <p style="color: brown">然后点准备开始游戏</p>
     </div>
 
 
@@ -36,7 +36,7 @@
         <div id="infobar" class="row">
             <div id="info0">行动代号</div>
             <div id="info1">二重奏</div>
-            <div id="info2">！</div>
+            <div id="info2">CAS畅玩版</div>
         </div>
 
         <div id="stage" class="row" style="padding-bottom: 1em">
@@ -69,6 +69,7 @@
         <div id="say">
             <input id="speech" type="text" style="width:80%;" />
             <button id="speak" class="button success"> 发送(回车) </button>
+            <button id="speak_shit" class="button error"> 催促 </button>
         </div>
     </div>
 </div>

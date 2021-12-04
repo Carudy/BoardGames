@@ -3,7 +3,7 @@ const server_port = '6969'
 var server_url = 'http://' + server_addr + ':' + server_port
 var ter = 100
 var cd = {
-        'beat' : 0,
+        'speak' : 0,
         'chat' : 0,
         'info' : 0,
     }
@@ -25,11 +25,34 @@ send = (data, callback)=>{
     })
 }
 
+set_cookie = (k, v) =>{
+    let d = new Date()
+    d.setTime(d.getTime()+(24*60*60*1000))
+    let expires = "expires="+d.toGMTString()
+    document.cookie = k + "=" + v + "; " + expires
+}
+
+get_cookie = (k) =>{
+    let name = k + "=";
+    let ca = document.cookie.split(';');
+    for(let i=0; i<ca.length; i++) {
+        let c = ca[i].trim();
+        if (c.indexOf(name)==0)
+            return c.substring(name.length,c.length);
+    }
+    return "";
+}
+
+
 $(() => { 
     $('#nick').val('Alice')
     $('#addr').val(server_addr)
     $('#port').val(server_port)
     // $('#type').val(0)
+    let cuid = get_cookie('username')
+    let cpwd = get_cookie('password')
+    if (cuid) $('#uid').val(cuid)
+    if (cpwd) $('#pwd').val(cpwd)
 
     for(let i=0; i<5; ++i){
         let s = ''
@@ -57,6 +80,8 @@ $(() => {
                 $('#info0').text(res.code==0 ? '登录成功' : res.msg)
                 player_id = $('#uid').val()
                 $('#nick').val(player_id)
+                set_cookie('username', $('#uid').val())
+                set_cookie('password', $('#pwd').val())
                 if (res.rid > 0){
                     $('#room_id').val(res.rid)
                 } else {
@@ -66,6 +91,11 @@ $(() => {
     })
 
     $('#speak').click(()=>{
+        if (cd['speak'] < 1000) {
+            $('#info2').text('说话太频繁！')
+            return
+        }
+        cd['speak'] = 0
         if($('#speech').val().length==0){
             $('#info2').text('消息不能为空！')
             return
@@ -75,6 +105,17 @@ $(() => {
             'cont' : $('#speech').val(),
         }, res=>{})
         $('#speech').val('')
+    })
+
+    $('#speak_shit').click(()=>{
+        if (cd['speak'] < 1500) {
+            $('#info2').text('催促太频繁！')
+            return
+        }
+        cd['speak'] = 0
+        send({
+            'cmd' : 'say_shit',
+        }, res=>{})
     })
 
     $('#ready').click(()=>{
@@ -176,6 +217,11 @@ ask_info = () =>{
             black   = res.black
             player_type = res.type
             grid    = res.grid.slice()
+            console.log(grid)
+            for (let i in grid) {
+                grid[i] = 0
+            }
+            console.log(grid)
             round   = res.round
             rival   = res.rival
             hinter  = res.hinter
@@ -206,6 +252,8 @@ ask_info = () =>{
             for (let word of cards){
                 moji += word
             }
+
+            return
         }
         if (res.playing == 1 || res.playing==0){
             playing = res.playing
@@ -258,8 +306,9 @@ guess = (x, y)=>{
 }
 
 god = ()=>{
-    for(i in cd){ cd[i] += ter }
-
+    for(i in cd){
+        cd[i] = Math.min(cd[i] +ter, 5000)
+    }
     // work
     ask_chat()
     ask_info()
