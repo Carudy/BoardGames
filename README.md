@@ -13,3 +13,7 @@ python index.py
 ```
 
 3. Both vist "server_ip:6969" then "link & ready".
+
+### Display
+
+![img](./duet.png)
