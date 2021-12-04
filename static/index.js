@@ -1,4 +1,4 @@
-const server_addr = window.location.hostname || '192.168.195.162'
+const server_addr = window.location.hostname || '172.18.101.147'
 const server_port = '6969'
 var server_url = 'http://' + server_addr + ':' + server_port
 var ter = 100
@@ -16,6 +16,10 @@ var rival = '', hinter = -1, moji = ''
 
 send = (data, callback)=>{
     data['game_name'] = 'duet'
+    data['rid'] = +$('#room_id').val()
+    if (data['cmd'] != 'login' && player_id != 0){
+        data['uid'] = player_id
+    }
     $.post('/', {'data': JSON.stringify(data)}, (res)=>{
         callback(res)
     })
@@ -44,15 +48,20 @@ $(() => {
         }
 
     $('#link').click(()=>{
-        if (player_id) return
         server_url = 'http://' + $('#addr').val() + ':' + $('#port').val()
         send({
-                'cmd' : 'reg',
-                'name' : $('#nick').val(),
+                'cmd' : 'login',
+                'uid' : $('#uid').val(),
+                'pwd' : $('#pwd').val(),
             }, res=>{
-                $('#info0').text(res.uid==-1 ? '人满了':(res.uid==-2 ? '昵称重复' : '成功连接'))
-                player_id = res.uid
-                beat_fail = 0
+                $('#info0').text(res.code==0 ? '登录成功' : res.msg)
+                player_id = $('#uid').val()
+                $('#nick').val(player_id)
+                if (res.rid > 0){
+                    $('#room_id').val(res.rid)
+                } else {
+                    $('#room_id').val(0)
+                }
             })
     })
 
@@ -61,23 +70,22 @@ $(() => {
             $('#info2').text('消息不能为空！')
             return
         }
-
         send({
             'cmd' : 'say',
-            'uid' : player_id,
             'cont' : $('#speech').val(),
         }, res=>{})
         $('#speech').val('')
     })
 
-
     $('#ready').click(()=>{
         send({
             'cmd' : 'ready',
-            'uid' : player_id,
+            'nick': $('#nick').val(),
         }, res=>{
             if(res.res==0){
                 $('#info1').text('准备就绪')
+            }else{
+                $('#info1').text(res['msg'])
             }
         })
     })
@@ -89,10 +97,9 @@ $(() => {
             return
         }
         if ($('#hint0').val().length<1 || $('#hint0').val().length>8){
-            $('#info2').text('长度不行！')
+            $('#info2').text('长度需在1-8之间！')
             return
         }
-
         keyword = $('#hint0').val()
         for (let ji of keyword){
             if (moji.indexOf(ji)!=-1){
@@ -103,7 +110,6 @@ $(() => {
 
         send({
             'cmd' : 'hint',
-            'uid' : player_id,
             'word': $('#hint0').val(),
             'num' : +$('#hint1').val(),
         }, res=>{
@@ -135,25 +141,6 @@ $(() => {
 
 
 //*************************************************************
-heart_beat = ()=>{
-    if (player_id==0) return
-    if (cd['beat'] >= 1500) {
-        beat_fail += 1
-        cd['beat'] = 0
-        send({'cmd' : 'beat', 'uid' : player_id}, res=>{
-            if(res.res=='ok'){
-                beat_fail = 0
-            }else{
-                $('#info0').text('暂时连接失败')
-            }
-        })
-    }
-    if(beat_fail>6){
-        $('#info0').text('连接失败')
-        player_id = 0
-    }
-}
-
 ask_chat = ()=>{
     if (cd['chat'] < 500) return
     cd['chat'] = 0
@@ -177,11 +164,12 @@ ask_chat = ()=>{
 }
 
 ask_info = () =>{
-    if (cd['info'] < 500) return
+    if (player_id == 0 || cd['info'] < 500) return
     cd['info'] = 0
-    send({'cmd' : 'info', 'uid' : player_id}, res=>{
+    send({'cmd' : 'info'}, res=>{
         // new game
         if (playing==0 && res.playing==1){
+            console.log('new')
             playing = res.playing
             cards   = res.cards
             green   = res.green
@@ -219,14 +207,17 @@ ask_info = () =>{
                 moji += word
             }
         }
-        playing = res.playing
+        if (res.playing == 1 || res.playing==0){
+            playing = res.playing
+        } else {
+            playing = 0
+        }
         // playing
         if (playing){
             round   = res.round
             hinter  = res.hinter
             coin    = res.coin
-            // console.log(res.hints)
-            $('#hinted').text(res.hints)
+            $('#hinted').html(res.hints)
             $('#credit').text(coin)
             $('#info0').text('回合：'+ (round+1) + '/9')
             $('#info1').text((player_type!=hinter)?'轮到你猜':'轮到你提示')
@@ -269,11 +260,6 @@ guess = (x, y)=>{
 god = ()=>{
     for(i in cd){ cd[i] += ter }
 
-    // whether alive
-    heart_beat()
-    if(beat_fail>1){return}
-    if(player_id==0){return}
-    
     // work
     ask_chat()
     ask_info()

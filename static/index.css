@@ -4,6 +4,10 @@
     padding: 0 auto;
 }
 
+body{
+    background: rgb(11, 12, 14);
+}
+
 button{
     margin-bottom: 3px;
 }
@@ -11,6 +15,14 @@ button{
 #login input{
     width: 80%;
     margin-bottom: 3px;
+}
+
+#con input{
+    margin-bottom: 5px;
+}
+
+#chat button{
+    margin-top: 1em;
 }
 
 #login{
@@ -97,6 +109,7 @@ button{
 }
 
 #hinted{
+    font-weight: bolder;
     color: linen;
 }
 
@@ -125,8 +138,8 @@ button{
 
 #chat_board{
   overflow: auto;
-  min-height: 80%;
-  max-height: 80%;
+  min-height: 30em;
+  max-height: 30em;
 }
 
 #say{

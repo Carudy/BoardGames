@@ -1,15 +1,24 @@
 import json
+import logging
 from flask import Flask, render_template, request
 
-from game import GameRoom
+from game import GameRoom, Lobby
 
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)
 app = Flask(__name__)
-G = GameRoom()
+L = Lobby()
 
 
 @app.route('/')
 def main():
     return render_template('duet.html')
+
+
+CMD_DICT = {
+    'login': L.login,
+    'ready': L.ready,
+}
 
 
 @app.route('/', methods=['POST'])
@@ -19,34 +28,10 @@ def work():
     data = json.loads(request.form['data'])
     if 'cmd' not in data or 'game_name' not in data or data['game_name'] != 'duet':
         return {}
-    if 'uid' in data and (G.players[data['uid']] is None):
-        return {}
-    if data['cmd'] == 'reg':
-        return G.add_player(data)
 
-    elif data['cmd'] == 'beat':
-        return G.beat(data['uid'])
-
-    elif data['cmd'] == 'say':
-        return G.add_say(data['uid'], data['cont'])
-
-    elif data['cmd'] == 'ask_chat':
-        return G.ask_say(data['from'])
-
-    elif data['cmd'] == 'info':
-        return G.ask_info(data['uid'])
-
-    elif data['cmd'] == 'ready':
-        return G.player_ready(data['uid'])
-
-    elif data['cmd'] == 'guess':
-        return G.guess(data['uid'], data['pos'])
-
-    elif data['cmd'] == 'hint':
-        return G.give_hint(data['uid'], data['word'], data['num'])
-
-    elif data['cmd'] == 'nomore':
-        return G.nomore(data['uid'])
+    if data['cmd'] in CMD_DICT:
+        return CMD_DICT[data['cmd']](data)
+    return L.room_action(data)
 
 
 if __name__ == '__main__':

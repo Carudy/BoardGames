@@ -10,23 +10,25 @@
 <body>
 
 <div class="row">
-    <div class="col-1"></div>
-
     <div id="login" class="col-2">
-        用户名
+        用户
         <input id="uid" type="text">
         密码
-        <input id="pwd" type="text">
+        <input id="pwd" type="password">
         服务器
         <input id="addr" type="text">
         <button id="link" class="button dark">连接</button>
         <br>
         昵称
         <input id="nick" type="text">
-        <button id="ready" class="button dark"> 准备好了</button>
+        房间号
+        <input id="room_id" type="text" value="0">
+        <button id="ready" class="button dark"> 准备</button>
         <br>
         <br>
-        <i style="color: brown">改昵称，先连接，再准备；</i>
+        <p style="color: brown">改昵称</p>
+        <p style="color: brown">先连接</p>
+        <p style="color: brown">再准备</p>
     </div>
 
 
@@ -38,10 +40,10 @@
         </div>
 
         <div id="stage" class="row" style="padding-bottom: 1em">
-            <table id="cards" class="col-10">
+            <table id="cards" class="col-9">
             </table>
 
-            <div id="hinted" class="col-2"> Hints:</div>
+            <div id="hinted" class="col-3"> Hints:</div>
         </div>
 
 
@@ -52,8 +54,8 @@
                 <p>
                     <input id="hint0" type="text" placeholder="关键词">
                     <input id="hint1" type="text" placeholder="数字">
-                    <button class="button dark" id="hint">给出提示</button>
-                    <button class="button dark" id="nomore"> 不猜了</button>
+                    <button class="button primary" id="hint">给出提示</button>
+                    <button class="button error" id="nomore"> 不猜了</button>
                 </p>
                 <ul>
                     <li><i> 提示词不能包含给出词牌中的字； </i></li>
@@ -62,11 +64,11 @@
         </div>
     </div>
 
-    <div id="chat" class="col-2">
+    <div id="chat" class="col-3">
         <div id="chat_board"></div>
         <div id="say">
             <input id="speech" type="text" style="width:80%;" />
-            <button id="speak" class="button dark"> 发送(回车) </button>
+            <button id="speak" class="button success"> 发送(回车) </button>
         </div>
     </div>
 </div>
