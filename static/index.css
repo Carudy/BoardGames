@@ -6,6 +6,7 @@
 
 body{
     background: rgb(11, 12, 14);
+    max-height: 99vh;
 }
 
 button{
@@ -18,6 +19,7 @@ button{
 }
 
 #con input{
+    margin-top: 5px;
     margin-bottom: 5px;
 }
 
@@ -27,8 +29,13 @@ button{
 
 #login{
     background: rgb(33, 44, 55);
+    height: 99vh;
     text-align: center;
     color: linen;
+}
+
+#mid{
+    height: 99vh;
 }
 
 ::-webkit-scrollbar
@@ -55,13 +62,14 @@ button{
     padding: 2px;
     background: #252f40;
     color: linen;
-    height: 3em;
+    height: 9%;
     font-weight: bolder;
+    text-align: center;
 }
 
 #stage{
     background: rgb(39, 39, 39);
-    height: auto;
+    height: 70%;
     padding-top: 2em;
 }
 
@@ -116,11 +124,13 @@ button{
 #con{
     background: rgb(54, 64, 73);
     color: linen;
+    height: 21%;
 }
 
 #chat{
   background: rgb(54, 64, 73);
   color: rgb(222, 223, 232);
+  height: 99vh;
 }
 
 .chat_box{
@@ -137,20 +147,19 @@ button{
 }
 
 .chat_box_shit{
-  color: rgb(170, 44, 172);
+  color: rgb(101, 202, 255);
   font-weight: bolder;
 }
 
 #chat_board{
   overflow: auto;
-  min-height: 35em;
-  max-height: 35em;
+  height: 75%;
 }
 
 #say{
-  height: 18%;
   margin-top: 0.5em;
   text-align: center;
+  height: 24%;
 }
 
 #credit{

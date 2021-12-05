@@ -140,6 +140,11 @@ $(() => {
         }, res=>{})
     })
 
+    $('#speak_reset').click(()=>{
+        $('#chat_board').text('')
+        chat_id = 0
+    })
+
     $('#ready').click(()=>{
         send({
             'cmd' : 'ready',
@@ -278,6 +283,14 @@ ask_info = () =>{
 
             return
         }
+
+        if (playing == 1 && res.playing==2){
+            alert('胜利!')
+            console.log('胜利-playing-2')
+            playing = 2
+            $('#info0').html('胜利，按准备继续')
+        }
+
         if (res.playing == 1 || res.playing==0){
             playing = res.playing
         } else {
@@ -323,6 +336,7 @@ guess = (x, y)=>{
             $('#info2').html('猜过了！')
         } else if(res.res==2){
             $('#info0').html('胜利，按准备继续')
+            console.log('胜利-playing-1')
             alert('胜利！')
         }
     })

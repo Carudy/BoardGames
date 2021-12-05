@@ -3,13 +3,14 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{url_for('static',filename='favicon.ico')}}" type="image/x-icon"/>
     <title>科研</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='chota.min.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}" type="text/css">
 </head>
 <body>
 
-<div class="row">
+<div class="row" id="all">
     <div id="login" class="col-2">
         用户
         <input id="uid" type="text">
@@ -35,18 +36,18 @@
     </div>
 
 
-    <div class="col-6">
+    <div class="col-6" id="mid">
         <div id="infobar" class="row">
-            <div id="info0">行动代号</div>
-            <div id="info1">二重奏</div>
-            <div id="info2">CAS畅玩版</div>
+            <div class="col" id="info0">行动代号</div>
+            <div class="col" id="info1">二重奏</div>
+            <div class="col" id="info2">CAS畅玩版</div>
         </div>
 
         <div id="stage" class="row" style="padding-bottom: 1em">
-            <table id="cards" class="col-9">
+            <table id="cards" class="col-10">
             </table>
 
-            <div id="hinted" class="col-3"> Hints:</div>
+            <div id="hinted" class="col"> Hints:</div>
         </div>
 
 
@@ -73,8 +74,9 @@
             <input id="speech" type="text" style="width:80%;" />
             <button id="speak" class="button success"> 发送(回车) </button>
             <button id="speak_shit" class="button error"> 催促 </button>
-            <button id="speak_good" class="button error"> 夸奖 </button>
-            <button id="speak_fuck" class="button error"> 疑问 </button>
+            <button id="speak_good" class="button primary"> 夸奖 </button>
+            <button id="speak_fuck" class="button secondary"> 表示疑惑 </button><br>
+            <button id="speak_reset" class="button outline primary"> 重新获取聊天内容 </button>
         </div>
     </div>
 </div>

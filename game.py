@@ -27,7 +27,7 @@ class GameRoom:
         self.chat = []
         self.playing = 0
         self.n_round = 0  # game round
-        self.words = list(set(filter(len, open('words', encoding='utf-8').read().split(' '))))
+        self.words = self.root.words[:]
         random.shuffle(self.words)
         self.points = list(product(range(5), range(5)))
         self.coin = self.round = 0
@@ -40,12 +40,12 @@ class GameRoom:
         self.gn = 0
         self.hints = []
         self.has_hint = 0
-        self.quick_words = ['油锅里煮豆腐---越煮越燥', '火烧到额头---迫在眉睫', '吃了秦椒烤火---里外发烧', '五内如焚', '椅子底下着火---烧着屁股燎着心', '心焦火燎',
-                            '火烧火燎']
-        self.good_words = ['太棒棒', '飞机上挂茶壶---水瓶(平)高', '冰雪聪明', '肚子里怀了个地图---知晓天下事', '兰质蕙心', '脱了毛的鞋刷子---有板有眼', '瞎子打拳---手法熟',
-                           '聪明一世']
-        self.fuck_words = ['???', '白昼见鬼', '¿', '离大谱', '擀面杖吹火——一窍不通', '放风筝断了线——没指望了', '东洋人戴高帽——假充大个',
-                           '人贵有自知之明', 'So common but confident!']
+        self.quick_words = ['油锅里煮豆腐——越煮越燥', '火烧到额头——迫在眉睫', '吃了秦椒烤火——里外发烧', '五内如焚', '椅子底下着火——烧着屁股燎着心', '心焦火燎',
+                            '火烧火燎', '急着吃饭呢']
+        self.good_words = ['太棒棒', '飞机上挂茶壶——水瓶(平)高', '冰雪聪明', '肚子里怀了个地图——知晓天下事', '兰质蕙心', '脱了毛的鞋刷子——有板有眼', '瞎子打拳——手法熟',
+                           '聪明一世', '善解人意']
+        self.fuck_words = ['???', '白昼见鬼', '¿', '离大谱', '擀面杖吹火——窍不通', '放风筝断了线——没指望了', '东洋人戴高帽——假充大个',
+                           '人贵有自知之明', 'So common but confident!', 'What r u doing?']
 
     @property
     def hinter(self):
@@ -119,7 +119,7 @@ class GameRoom:
                 'black': self.black[self.get_player(data['uid']).type],
                 'grid': self.card_status,
                 'rival': self.get_player(rival).name,
-                'hints': '<br/>'.join(':'.join(i[1:]) for i in self.hints),
+                'hints': '<br/>'.join(': '.join(i[1:]) for i in self.hints),
             }
         return {
             'playing': self.playing,
@@ -152,16 +152,17 @@ class GameRoom:
             self.black = [random.sample(self.points[9:], 3), random.sample(self.points[:6] + self.points[15:], 3)]
             self.card_status = [0] * 25
 
-    def stop_game(self):
+    def stop_game(self, win=False):
         print(f'Room {self.rid} game end.')
-        self.playing = self.coin = 0
+        self.coin = 0
+        self.playing = 2 if win else 0
         for u in self.inroom:
             self.get_player(u).ready = 0
 
     def player_ready(self, data):
         if 'nick' in data:
             self.get_player(data['uid']).name = data['nick']
-        if self.playing != 0:
+        if self.playing == 1:
             return {'res': 1}
         print('{} get ready.'.format(data['uid']))
         self.get_player(data['uid']).ready = 1
@@ -232,8 +233,11 @@ class GameRoom:
             self.coin += 1
             if self.coin >= 15:
                 self.dy_say(o_say + '胜利！')
-                self.stop_game()
+                self.stop_game(win=True)
                 return {'res': 9}
+            if self.check_done(rival):
+                nm = self.get_player(data["uid"]).name
+                self.dy_say(o_say + f'{nm} 猜出了所有词！剩下由{nm}来给提示！')
             return {'res': 0}
 
 
@@ -241,12 +245,10 @@ class Lobby:
     def __init__(self):
         self.rooms = defaultdict(lambda: None)
         self.players = defaultdict(lambda: None)
-        self.basepath = Path(os.path.dirname(__file__))
-        self.accounts = eval((self.basepath / 'static/users').open(encoding='utf-8').read())
-        for stu in ['wanghao', 'zhouteng', 'zhaozhixin', 'zhouwenjie', 'jinzikang', 'dengzihao', 'liuyan', 'lizhicheng',
-                    'yinchangchun', 'shiyundi', 'wuxiaofei', 'wangshenqing', 'wangluyao', 'yanghao', 'wuweibin',
-                    'jiaoruohong', 'yangjingxiu', 'zhangjingtang', 'hesihan', 'guoxin', 'niuyuqing', 'zhangwen',
-                    'luosinian', 'dongweiliang']:
+        self.base_path = Path(os.path.dirname(__file__))
+        self.accounts = eval((self.base_path / 'static/users').open(encoding='utf-8').read())
+        students = eval((self.base_path / 'static/students.txt').open(encoding='utf-8').read())
+        for stu in students:
             self.accounts[stu] = stu
         self.cmd_dict = {
             'say': 'add_say',
@@ -259,6 +261,8 @@ class Lobby:
             'hint': 'give_hint',
             'nomore': 'nomore',
         }
+        self.words = list(
+            set(filter(len, open(self.base_path / 'static/words.txt', encoding='utf-8').read().split(' '))))
 
     def login(self, data):
         if data['uid'] not in self.accounts:
