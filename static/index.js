@@ -108,13 +108,35 @@ $(() => {
     })
 
     $('#speak_shit').click(()=>{
-        if (cd['speak'] < 1500) {
-            $('#info2').text('催促太频繁！')
+        if (cd['speak'] < 1000) {
+            $('#info2').text('太频繁！')
             return
         }
         cd['speak'] = 0
         send({
             'cmd' : 'say_shit',
+        }, res=>{})
+    })
+
+    $('#speak_good').click(()=>{
+        if (cd['speak'] < 1000) {
+            $('#info2').text('太频繁！')
+            return
+        }
+        cd['speak'] = 0
+        send({
+            'cmd' : 'say_good',
+        }, res=>{})
+    })
+
+    $('#speak_fuck').click(()=>{
+        if (cd['speak'] < 1000) {
+            $('#info2').text('太频繁！')
+            return
+        }
+        cd['speak'] = 0
+        send({
+            'cmd' : 'say_fuck',
         }, res=>{})
     })
 
@@ -156,6 +178,7 @@ $(() => {
         }, res=>{
             $('#hint0').val('')
             $('#hint1').val('')
+            console.log(res)
         })
     })
 
@@ -210,18 +233,15 @@ ask_info = () =>{
     send({'cmd' : 'info'}, res=>{
         // new game
         if (playing==0 && res.playing==1){
-            console.log('new')
             playing = res.playing
             cards   = res.cards
             green   = res.green
             black   = res.black
             player_type = res.type
             grid    = res.grid.slice()
-            console.log(grid)
             for (let i in grid) {
                 grid[i] = 0
             }
-            console.log(grid)
             round   = res.round
             rival   = res.rival
             hinter  = res.hinter

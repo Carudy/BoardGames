@@ -40,6 +40,10 @@ class GameRoom:
         self.gn = 0
         self.hints = []
         self.has_hint = 0
+        self.quick_words = ['搓手顿脚', '抓耳挠腮', '心烦意燥', '五内如焚', '腹热心煎', '心焦火燎', '以日为年']
+        self.good_words = ['太棒棒', '好🐮', '冰雪聪明', '精明强干', '兰质蕙心', '七窍玲珑']
+        self.fuck_words = ['???', '白昼见鬼', '孤陋寡闻', '¿¿¿']
+
 
     @property
     def hinter(self):
@@ -72,9 +76,19 @@ class GameRoom:
         self.chat.append((self.get_player(data['uid']).name, data['cont']))
         return {'res': 0}
 
+    def add_say_fuck(self, data):
+        fuck_word = random.choice(self.fuck_words)
+        self.dy_say(f'{self.get_player(data["uid"]).name}表示：{fuck_word}')
+        return {'res': 0}
+
+    def add_say_good(self, data):
+        good_word = random.choice(self.good_words)
+        self.dy_say(f'哇! {self.get_player(data["uid"]).name}觉得您真是{good_word}呢！')
+        return {'res': 0}
+
     def add_say_shit(self, data):
-        quick_word = random.choice(['搓手顿脚', '抓耳挠腮', '心烦意燥', '五内如焚', '腹热心煎', '心焦火燎', '以日为年'])
-        self.dy_say(f'GKD! {self.get_player(data["uid"]).name}已经等得{quick_word}了！')
+        quick_word = random.choice(self.quick_words)
+        self.dy_say(f'求求你GKD吧! {self.get_player(data["uid"]).name}已经等得{quick_word}了！')
         return {'res': 0}
 
     def dy_say(self, cont):
@@ -140,7 +154,8 @@ class GameRoom:
             self.get_player(u).ready = 0
 
     def player_ready(self, data):
-        self.get_player(data['uid']).name = data['nick']
+        if 'nick' in data:
+            self.get_player(data['uid']).name = data['nick']
         if self.playing != 0:
             return {'res': 1}
         print('{} get ready.'.format(data['uid']))
@@ -150,10 +165,10 @@ class GameRoom:
 
     def give_hint(self, data):
         if self.get_player(data['uid']).type != self.hinter:
-            return {'res': 0}
+            return {'res': 0, 'msg': 'not hinter'}
         self.hint = [data['word'], data['num']]
-        if self.hints and data['uid'] == self.hints[-1][0]:
-            return {'res': 0}
+        if self.hints and data['uid'] == self.hints[-1][0] and (not self.check_done(self.hinter ^ 1)):
+            return {'res': 0, 'msg': 'has hinted'}
         self.hints.append((data['uid'], data['word'], str(data['num'])))
         self.dy_say(f'{self.get_player(data["uid"]).name} 给了提示： {data["word"]}, {data["num"]}')
         print(f'{self.get_player(data["uid"]).name} 提示： {data["word"]}, {data["num"]}')
@@ -231,6 +246,8 @@ class Lobby:
         self.cmd_dict = {
             'say': 'add_say',
             'say_shit': 'add_say_shit',
+            'say_good': 'add_say_good',
+            'say_fuck': 'add_say_fuck',
             'ask_chat': 'ask_say',
             'info': 'ask_info',
             'guess': 'guess',

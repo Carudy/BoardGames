@@ -64,15 +64,18 @@
         </div>
     </div>
 
-    <div id="chat" class="col-3">
+    <div id="chat" class="col-4">
         <div id="chat_board"></div>
         <div id="say">
             <input id="speech" type="text" style="width:80%;" />
             <button id="speak" class="button success"> 发送(回车) </button>
             <button id="speak_shit" class="button error"> 催促 </button>
+            <button id="speak_good" class="button error"> 夸奖 </button>
+            <button id="speak_fuck" class="button error"> 疑问 </button>
         </div>
     </div>
 </div>
+
 </body>
 <script type="text/javascript" src="{{ url_for('static', filename='jquery-3.6.0.min.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='index.js') }}"></script>
