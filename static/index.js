@@ -212,10 +212,13 @@ ask_chat = ()=>{
         if(res.n>0){
             for (i in res.data) {
                 let cont = ''
-                if (res.data[i][0]){
+                if (res.data[i][0] && res.data[i][0] != 'shit'){
                     cont = res.data[i][0] + ': ' + res.data[i][1]
                     cont = '<div class="chat_box">' + cont + '</div>'
-                } else{
+                } else if (res.data[i][0] == 'shit') {
+                    cont = res.data[i][1]
+                    cont = '<div class="chat_box chat_box_shit">' + cont + '</div>'
+                } else {
                     cont = res.data[i][1]
                     cont = '<div class="chat_box chat_box_sys">' + cont + '</div>'
                 }

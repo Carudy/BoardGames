@@ -2,7 +2,7 @@ import json
 import logging
 from flask import Flask, render_template, request
 
-from game import GameRoom, Lobby
+from game import Lobby
 
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)

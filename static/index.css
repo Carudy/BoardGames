@@ -136,6 +136,11 @@ button{
   font-weight: bolder;
 }
 
+.chat_box_shit{
+  color: rgb(170, 44, 172);
+  font-weight: bolder;
+}
+
 #chat_board{
   overflow: auto;
   min-height: 35em;

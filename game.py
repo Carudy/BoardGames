@@ -40,10 +40,12 @@ class GameRoom:
         self.gn = 0
         self.hints = []
         self.has_hint = 0
-        self.quick_words = ['搓手顿脚', '抓耳挠腮', '心烦意燥', '五内如焚', '腹热心煎', '心焦火燎', '以日为年']
-        self.good_words = ['太棒棒', '好🐮', '冰雪聪明', '精明强干', '兰质蕙心', '七窍玲珑']
-        self.fuck_words = ['???', '白昼见鬼', '孤陋寡闻', '¿¿¿']
-
+        self.quick_words = ['油锅里煮豆腐---越煮越燥', '火烧到额头---迫在眉睫', '吃了秦椒烤火---里外发烧', '五内如焚', '椅子底下着火---烧着屁股燎着心', '心焦火燎',
+                            '火烧火燎']
+        self.good_words = ['太棒棒', '飞机上挂茶壶---水瓶(平)高', '冰雪聪明', '肚子里怀了个地图---知晓天下事', '兰质蕙心', '脱了毛的鞋刷子---有板有眼', '瞎子打拳---手法熟',
+                           '聪明一世']
+        self.fuck_words = ['???', '白昼见鬼', '¿', '离大谱', '擀面杖吹火——一窍不通', '放风筝断了线——没指望了', '东洋人戴高帽——假充大个',
+                           '人贵有自知之明', 'So common but confident!']
 
     @property
     def hinter(self):
@@ -78,18 +80,21 @@ class GameRoom:
 
     def add_say_fuck(self, data):
         fuck_word = random.choice(self.fuck_words)
-        self.dy_say(f'{self.get_player(data["uid"]).name}表示：{fuck_word}')
+        self.shit_say(f'{self.get_player(data["uid"]).name}表示：{fuck_word}')
         return {'res': 0}
 
     def add_say_good(self, data):
         good_word = random.choice(self.good_words)
-        self.dy_say(f'哇! {self.get_player(data["uid"]).name}觉得您真是{good_word}呢！')
+        self.shit_say(f'哇! {self.get_player(data["uid"]).name}觉得您真是{good_word}呢！')
         return {'res': 0}
 
     def add_say_shit(self, data):
         quick_word = random.choice(self.quick_words)
-        self.dy_say(f'求求你GKD吧! {self.get_player(data["uid"]).name}已经等得{quick_word}了！')
+        self.shit_say(f'求求你GKD吧! {self.get_player(data["uid"]).name}已经等得{quick_word}了！')
         return {'res': 0}
+
+    def shit_say(self, cont):
+        self.chat.append(('shit', cont))
 
     def dy_say(self, cont):
         self.chat.append(('', cont))
