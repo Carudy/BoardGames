@@ -1,5 +1,5 @@
 *{
-    font-size: 1em;
+    font-size: 2vh;
     margin: 0 auto;
     padding: 0 auto;
 }
@@ -7,24 +7,44 @@
 body{
     background: rgb(11, 12, 14);
     max-height: 99vh;
+    overflow: hidden;
 }
 
 button{
-    margin-bottom: 3px;
+    margin-top: 0.5vh;
+    margin-bottom: 0.5vh;
+    font-size: 1.5vh !important;
 }
 
 #login input{
     width: 80%;
-    margin-bottom: 3px;
+    margin-bottom: 0.5vh;
+}
+
+#login .components {
+  margin-top: 5vh;
 }
 
 #con input{
-    margin-top: 5px;
-    margin-bottom: 5px;
+    margin-top: 0.5vh;
+    margin-bottom: 0.5vh;
+}
+
+#con > * {
+    margin-top: 0.5vh
+}
+
+#chat .components {
+  margin-top: 0.5vh;
+}
+
+#chat input {
+    margin-top: 0.7vh;
+    margin-right: -1.5vw;
 }
 
 #chat button{
-    margin-top: 1em;
+    margin-top: 1vh;
 }
 
 #login{
@@ -153,16 +173,24 @@ button{
 
 #chat_board{
   overflow: auto;
-  height: 75%;
+  height: 75vh;
 }
 
 #say{
   margin-top: 0.5em;
   text-align: center;
-  height: 24%;
+  height: 25vh;
+}
+
+.send {
+  margin-top: -1vh;
 }
 
 #credit{
   font-size: 1.3em;
   color: #9b25b9;
+}
+
+.col {
+  margin-top: 2vh
 }

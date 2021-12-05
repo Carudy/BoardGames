@@ -12,27 +12,29 @@
 
 <div class="row" id="all">
     <div id="login" class="col-2">
-        用户
-        <input id="uid" type="text">
-        密码
-        <input id="pwd" type="password">
-        服务器
-        <input id="addr" type="text">
-        <button id="link" class="button dark">连接</button>
-        <br>
-        昵称
-        <input id="nick" type="text">
-        房间号
-        <input id="room_id" type="text" value="0">
-        <button id="ready" class="button dark"> 准备</button>
-        <br>
-        <br>
-        <p style="color: brown">先连接，用户名密码都是姓名的拼音</p>
-        <p style="color: brown">改昵称，和小伙伴协商房间号</p>
-        <p style="color: brown">然后点准备开始游戏</p> <br>
-        <p style="color: brown">
-            <a href="https://mp.weixin.qq.com/s/B4R1o-qtQ2LxgLY4pGsV2A" target="_blank">游戏规则参考</a>
-        </p>
+        <div class="components">
+            用户
+            <input id="uid" type="text">
+            密码
+            <input id="pwd" type="password">
+            服务器
+            <input id="addr" type="text">
+            <button id="link" class="button dark">连接</button>
+            <br>
+            昵称
+            <input id="nick" type="text">
+            房间号
+            <input id="room_id" type="text" value="0">
+            <button id="ready" class="button dark"> 准备</button>
+            <br>
+            <br>
+            <p style="color: brown">先连接，用户名密码都是姓名的拼音</p>
+            <p style="color: brown">改昵称，和小伙伴协商房间号</p>
+            <p style="color: brown">然后点准备开始游戏</p> <br>
+            <p style="color: brown">
+                <a href="https://mp.weixin.qq.com/s/B4R1o-qtQ2LxgLY4pGsV2A" target="_blank">游戏规则参考</a>
+            </p>
+        </div>
     </div>
 
 
@@ -69,14 +71,22 @@
     </div>
 
     <div id="chat" class="col-4">
-        <div id="chat_board"></div>
-        <div id="say">
-            <input id="speech" type="text" style="width:80%;" />
-            <button id="speak" class="button success"> 发送(回车) </button>
-            <button id="speak_shit" class="button error"> 催促 </button>
-            <button id="speak_good" class="button primary"> 夸奖 </button>
-            <button id="speak_fuck" class="button secondary"> 表示疑惑 </button><br>
-            <button id="speak_reset" class="button outline primary"> 重新获取聊天内容 </button>
+        <div class="components">
+            <div style="text-align: center;">
+                <button id="speak_reset" class="button outline primary"> 重新获取聊天内容 </button>
+            </div>
+            <div id="chat_board"></div>
+            <div id="say">
+                <div>
+                    <input id="speech" type="text" style="width:60%; float:left; margin-left:2vw" />
+                    <button id="speak" class="button success"> 发送(回车) </button>
+                </div>
+                <div style="display: inline;">
+                    <button id="speak_shit" class="button error"> 催促 </button>
+                    <button id="speak_good" class="button primary"> 夸奖 </button>
+                    <button id="speak_fuck" class="button secondary"> 表示疑惑 </button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
