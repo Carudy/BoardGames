@@ -1,13 +1,11 @@
-import json
-import os
 import time
 import random
 from itertools import product
-from collections import defaultdict
-from pathlib import Path
+
+from .util import Lobby
 
 
-class Player:
+class PlayerDuet:
     def __init__(self, name):
         self.uid = ''
         self.rid = 0
@@ -19,7 +17,7 @@ class Player:
         self.guessed = set()
 
 
-class GameRoom:
+class RoomDuet:
     def __init__(self, rid, root):
         self.root = root
         self.rid = rid
@@ -40,12 +38,6 @@ class GameRoom:
         self.gn = 0
         self.hints = []
         self.has_hint = 0
-        self.quick_words = ['油锅里煮豆腐——越煮越燥', '火烧到额头——迫在眉睫', '吃了秦椒烤火——里外发烧', '五内如焚', '椅子底下着火——烧着屁股燎着心', '心焦火燎',
-                            '火烧火燎', '急着吃饭呢']
-        self.good_words = ['太棒棒', '飞机上挂茶壶——水瓶(平)高', '冰雪聪明', '肚子里怀了个地图——知晓天下事', '兰质蕙心', '脱了毛的鞋刷子——有板有眼', '瞎子打拳——手法熟',
-                           '聪明一世', '善解人意']
-        self.fuck_words = ['???', '白昼见鬼', '¿', '离大谱', '擀面杖吹火——窍不通', '放风筝断了线——没指望了', '东洋人戴高帽——假充大个',
-                           '人贵有自知之明', 'So common but confident!', 'What r u doing?']
 
     @property
     def hinter(self):
@@ -79,17 +71,17 @@ class GameRoom:
         return {'res': 0}
 
     def add_say_fuck(self, data):
-        fuck_word = random.choice(self.fuck_words)
+        fuck_word = random.choice(self.root.fuck_words)
         self.shit_say(f'{self.get_player(data["uid"]).name}表示：{fuck_word}')
         return {'res': 0}
 
     def add_say_good(self, data):
-        good_word = random.choice(self.good_words)
+        good_word = random.choice(self.root.good_words)
         self.shit_say(f'哇! {self.get_player(data["uid"]).name}觉得您真是{good_word}呢！')
         return {'res': 0}
 
     def add_say_shit(self, data):
-        quick_word = random.choice(self.quick_words)
+        quick_word = random.choice(self.root.quick_words)
         self.shit_say(f'求求你GKD吧! {self.get_player(data["uid"]).name}已经等得{quick_word}了！')
         return {'res': 0}
 
@@ -241,15 +233,9 @@ class GameRoom:
             return {'res': 0}
 
 
-class Lobby:
+class LobbyDuet(Lobby):
     def __init__(self):
-        self.rooms = defaultdict(lambda: None)
-        self.players = defaultdict(lambda: None)
-        self.base_path = Path(os.path.dirname(__file__))
-        self.accounts = eval((self.base_path / 'static/users').open(encoding='utf-8').read())
-        students = eval((self.base_path / 'static/students.txt').open(encoding='utf-8').read())
-        for stu in students:
-            self.accounts[stu] = stu
+        super().__init__(name='duet', player_cls=PlayerDuet, room_cls=RoomDuet)
         self.cmd_dict = {
             'say': 'add_say',
             'say_shit': 'add_say_shit',
@@ -263,46 +249,9 @@ class Lobby:
         }
         self.words = list(
             set(filter(len, open(self.base_path / 'static/words.txt', encoding='utf-8').read().split(' '))))
-
-    def login(self, data):
-        if data['uid'] not in self.accounts:
-            return {'code': 1, 'msg': 'No this user.'}
-        if data['pwd'] != self.accounts[data['uid']]:
-            return {'code': 1, 'msg': 'Wrong password.'}
-        if self.players[data['uid']] is None:
-            self.players[data['uid']] = Player(data['uid'])
-        else:
-            self.players[data['uid']].beat = time.time()
-        print(f'{data["uid"]} logged in')
-        return {
-            'code': 0,
-            'rid': self.players[data['uid']].rid,
-        }
-
-    @property
-    def alives(self):
-        ima = time.time()
-        res = [u for u in self.players if (self.players[u].beat - ima) < 60]
-        return res
-
-    def ready(self, data):
-        if 'uid' not in data or self.players[data['uid']] is None:
-            return {'code': 1, 'msg': 'not logged in'}
-        if data['rid'] <= 0:
-            return {'code': 1, 'msg': 'require room id > 0'}
-        if self.players[data['uid']].rid != data['rid'] and self.players[data['uid']].rid > 0 and self.rooms[
-            self.players[data['uid']].rid] is not None:
-            self.rooms[self.players[data['uid']].rid].remove_player(data['uid'])
-        if self.rooms[data['rid']] is None:
-            self.rooms[data['rid']] = GameRoom(rid=data['rid'], root=self)
-        res = self.rooms[data['rid']].add_player(data)
-        if res['code'] != 0:
-            return res
-        return self.rooms[data['rid']].player_ready(data)
-
-    def room_action(self, data):
-        if 'uid' not in data:
-            return {'code': 1}
-        if self.rooms[data['rid']] is None or data['uid'] not in self.rooms[data['rid']].inroom:
-            return {'code': 1, 'msg': 'wrong room'}
-        return getattr(self.rooms[data['rid']], self.cmd_dict[data['cmd']])(data)
+        self.quick_words = ['油锅里煮豆腐——越煮越燥', '火烧到额头——迫在眉睫', '吃了秦椒烤火——里外发烧', '五内如焚', '椅子底下着火——烧着屁股燎着心', '心焦火燎',
+                            '火烧火燎', '急着吃饭呢']
+        self.good_words = ['太棒棒', '飞机上挂茶壶——水瓶(平)高', '冰雪聪明', '肚子里怀了个地图——知晓天下事', '兰质蕙心', '脱了毛的鞋刷子——有板有眼', '瞎子打拳——手法熟',
+                           '聪明一世', '善解人意']
+        self.fuck_words = ['???', '白昼见鬼', '¿', '离大谱', '擀面杖吹火——窍不通', '放风筝断了线——没指望了', '东洋人戴高帽——假充大个',
+                           '人贵有自知之明', 'So common but confident!', 'What r u doing?']

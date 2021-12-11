@@ -2,23 +2,25 @@ import json
 import logging
 from flask import Flask, render_template, request
 
-from game import Lobby
+from games import *
 
-log = logging.getLogger('werkzeug')
-log.setLevel(logging.ERROR)
+_log = logging.getLogger('werkzeug')
+_log.setLevel(logging.ERROR)
 app = Flask(__name__)
-L = Lobby()
-
-
-@app.route('/')
-def main():
-    return render_template('duet.html')
-
+duet_lobby = LobbyDuet()
 
 CMD_DICT = {
-    'login': L.login,
-    'ready': L.ready,
+    'login': duet_lobby.login,
+    'ready': duet_lobby.ready,
 }
+
+GAMES = {'duet', 'draw'}
+
+
+@app.route('/<name>')
+def main(name):
+    if name in GAMES:
+        return render_template(f'{name}.html')
 
 
 @app.route('/', methods=['POST'])
@@ -26,12 +28,12 @@ def work():
     if 'data' not in request.form:
         return {}
     data = json.loads(request.form['data'])
-    if 'cmd' not in data or 'game_name' not in data or data['game_name'] != 'duet':
+    if 'cmd' not in data or 'game_name' not in data or data['game_name'] != GAMES:
         return {}
 
     if data['cmd'] in CMD_DICT:
         return CMD_DICT[data['cmd']](data)
-    return L.room_action(data)
+    return duet_lobby.room_action(data)
 
 
 if __name__ == '__main__':

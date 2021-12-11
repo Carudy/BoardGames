@@ -7,8 +7,7 @@ var cd = {
         'chat' : 0,
         'info' : 0,
     }
-var beat_fail = 0
-var player_id = 0, player_type = 0, play_id = 0, playing = 0
+var player_id = 0, player_type = 0, playing = 0
 var chat_id = 0
 
 var cards = [], green = [], black = [], grid = [], round = 0
@@ -212,6 +211,7 @@ $(() => {
 //*************************************************************
 ask_chat = ()=>{
     if (cd['chat'] < 500) return
+    if (player_id == 0) return
     cd['chat'] = 0
     send({'cmd' : 'ask_chat', 'from' : chat_id}, res=>{
         if(res.n>0){

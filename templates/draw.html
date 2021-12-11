@@ -31,25 +31,20 @@
             <p style="color: brown">先连接，用户名密码都是姓名的拼音</p>
             <p style="color: brown">改昵称，和小伙伴协商房间号</p>
             <p style="color: brown">然后点准备开始游戏</p> <br>
-            <p style="color: brown">
-                <a href="https://mp.weixin.qq.com/s/B4R1o-qtQ2LxgLY4pGsV2A" target="_blank">游戏规则参考</a>
-            </p>
+
         </div>
     </div>
 
 
     <div class="col-6" id="mid">
         <div id="infobar" class="row">
-            <div class="col" id="info0">行动代号</div>
-            <div class="col" id="info1">二重奏</div>
+            <div class="col" id="info0">你画我猜</div>
+            <div class="col" id="info1"></div>
             <div class="col" id="info2">CAS畅玩版</div>
         </div>
 
-        <div id="stage" class="row" style="padding-bottom: 1em">
-            <table id="cards" class="col-10">
-            </table>
-
-            <div id="hinted" class="col"> Hints:</div>
+        <div id="stage" class="row" style="padding:0">
+            <canvas id="canvas"></canvas>
         </div>
 
 
@@ -93,5 +88,5 @@
 
 </body>
 <script type="text/javascript" src="{{ url_for('static', filename='web/jquery-3.6.0.min.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='web/duet.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='web/draw.js') }}"></script>
 </html>
