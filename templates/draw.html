@@ -6,7 +6,7 @@
     <link rel="shortcut icon" href="{{url_for('static',filename='web/favicon.ico')}}" type="image/x-icon"/>
     <title>科研</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='web/chota.min.css') }}" type="text/css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='web/duet.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='web/draw.css') }}" type="text/css">
 </head>
 <body>
 
@@ -44,24 +44,36 @@
         </div>
 
         <div id="stage" class="row" style="padding:0">
-            <canvas id="canvas"></canvas>
+            <div id="pad">
+                <div style="width:70%; float:left;">
+                    <button class="button painter">白</button>
+                    <button class="button painter" style="color: white; background: red">红</button>
+                    <button class="button painter" style="color: white; background: green">绿</button>
+                    <button class="button painter" style="color: white; background: rgb(97,175,239)">蓝</button>
+                    <button class="button painter" style="color: brown; background: gold">黄</button>
+                    <button class="button painter" style="color: white; background: purple">紫</button>
+                </div>
+                <div style="width:20%; float:right;">
+                    <button id="reset" class="button error">重画</button>
+                </div>
+            </div>
+            <canvas id="canvas">
+
+            </canvas>
         </div>
 
 
         <div class="row" id="con">
-                <p>
-                    已猜对：<span id="credit">0</span>
-                </p>
-                <p>
-                    <input id="hint0" type="text" placeholder="关键词">
-                    <input id="hint1" type="text" placeholder="数字">
-                    <button class="button primary" id="hint">给出提示</button>
-                    <button class="button error" id="nomore"> 不猜了</button>
-                </p>
+            <div class="col-4">
+                    <input id="guess_cont" type="text" placeholder="猜它！">
+                    <button class="button primary" id="hint">猜！</button>
+            </div>
+            <div class="col">
+                房间内用户：
                 <ul>
-                    <li><i> 提示词不能包含给出词牌中的字； </i></li>
-                    <li><i> 提示词不能为谐音梗或坐标等信息；</i></li>
+                    <li>xxx</li>
                 </ul>
+            </div>
         </div>
     </div>
 

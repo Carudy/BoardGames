@@ -1,0 +1,200 @@
+*{
+    font-size: 2vh;
+    margin: 0 auto;
+    padding: 0 auto;
+}
+
+body{
+    background: rgb(11, 12, 14);
+    max-height: 99vh;
+    overflow: hidden;
+}
+
+button{
+    margin-top: 0.5vh;
+    margin-bottom: 0.5vh;
+    font-size: 1.5vh !important;
+}
+
+#login input{
+    width: 80%;
+    margin-bottom: 0.5vh;
+}
+
+#login .components {
+  margin-top: 5vh;
+}
+
+#con input{
+    margin-top: 0.5vh;
+    margin-bottom: 0.5vh;
+}
+
+#con > * {
+    margin-top: 0.5vh
+}
+
+#chat .components {
+  margin-top: 0.5vh;
+}
+
+#chat input {
+    margin-top: 0.7vh;
+    margin-right: -1.5vw;
+}
+
+#chat button{
+    margin-top: 1vh;
+}
+
+#login{
+    background: rgb(33, 44, 55);
+    height: 99vh;
+    text-align: center;
+    color: linen;
+}
+
+#mid{
+    height: 99vh;
+}
+
+::-webkit-scrollbar
+{
+    width: 0.5em;
+    height: 0.5em;
+    background-color: #F5F5F5;
+    border-radius: 0.4em;
+}
+
+::-webkit-scrollbar-track
+{
+    border-radius: 0.4em;
+    background-color: #9ea4ad;
+}
+
+::-webkit-scrollbar-thumb
+{
+    border-radius: 0.4em;
+    background-color: #231e0d;
+}
+
+#infobar{
+    padding: 2px;
+    background: #252f40;
+    color: linen;
+    height: 5%;
+    font-weight: bolder;
+    text-align: center;
+}
+
+#stage{
+    background: rgb(19, 19, 19);
+    height: 70%;
+    padding-top: 2em;
+}
+
+#pad{
+    padding-top: 1vh;
+    padding-left: 1vh;
+    background: rgb(42, 42, 42);
+    width: 100%;
+    height: 10%;
+}
+
+#cards{
+  width: 95%;
+  height: auto;
+}
+
+#cards td{
+  font-size: 1.2em;
+}
+
+#cards td:hover{
+  background: #f7a056;
+}
+
+.card{
+  padding: 8px;
+  text-align: center;
+  width: 5em;
+  height: 5em;
+  background: #ececbd;
+  color: #33267b;
+  font-weight: bolder;
+}
+
+.card-yes{
+  background: green;
+  color: linen;
+}
+
+.card-no{
+  background: rgb(15, 16, 17);
+  color: linen;
+}
+
+.card-done{
+  background: skyblue;
+}
+
+.cinfo{
+  font-size: 0.6em;
+  font-weight: normal;
+  font-style: italic;
+}
+
+#hinted{
+    font-weight: bolder;
+    color: linen;
+}
+
+#con{
+    background: rgb(54, 64, 73);
+    color: linen;
+    height: 25%;
+}
+
+#chat{
+  background: rgb(54, 64, 73);
+  color: rgb(222, 223, 232);
+  height: 99vh;
+}
+
+.chat_box{
+  margin-left: 0.5em;
+  margin-top: 0.5em;
+  font-weight: bold;
+  word-wrap:break-word;
+  word-break:break-all;
+}
+
+.chat_box_sys{
+  color: darkorange;
+  font-weight: bolder;
+}
+
+.chat_box_shit{
+  color: rgb(101, 202, 255);
+  font-weight: bolder;
+}
+
+#chat_board{
+  overflow: auto;
+  height: 75vh;
+}
+
+#say{
+  margin-top: 0.5em;
+  text-align: center;
+  height: 25vh;
+}
+
+.send {
+  margin-top: -1vh;
+}
+
+#credit{
+  font-size: 1.3em;
+  color: #9b25b9;
+}
