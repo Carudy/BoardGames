@@ -1,50 +1,15 @@
-const server_addr = window.location.hostname || '172.18.101.147'
+var game_name = 'duet'
+const server_addr = window.location.hostname
 const server_port = '6969'
-var server_url = 'http://' + server_addr + ':' + server_port
+var server_url = 'https://' + server_addr + ':' + server_port
 var ter = 100
-var cd = {
-        'speak' : 0,
-        'chat' : 0,
-        'info' : 0,
-    }
 var player_id = 0, player_type = 0, playing = 0
 var chat_id = 0
 
 var cards = [], green = [], black = [], grid = [], round = 0
 var rival = '', hinter = -1, moji = ''
 
-send = (data, callback)=>{
-    data['game_name'] = 'duet'
-    data['rid'] = +$('#room_id').val()
-    if (data['cmd'] != 'login' && player_id != 0){
-        data['uid'] = player_id
-    }
-    $.post('/', {'data': JSON.stringify(data)}, (res)=>{
-        callback(res)
-    })
-}
-
-set_cookie = (k, v) =>{
-    let d = new Date()
-    d.setTime(d.getTime()+(24*60*60*1000))
-    let expires = "expires="+d.toGMTString()
-    document.cookie = k + "=" + v + "; " + expires
-}
-
-get_cookie = (k) =>{
-    let name = k + "=";
-    let ca = document.cookie.split(';');
-    for(let i=0; i<ca.length; i++) {
-        let c = ca[i].trim();
-        if (c.indexOf(name)==0)
-            return c.substring(name.length,c.length);
-    }
-    return "";
-}
-
-
-$(() => { 
-    $('#nick').val('Alice')
+$(() => {
     $('#addr').val(server_addr)
     $('#port').val(server_port)
     // $('#type').val(0)
@@ -69,42 +34,7 @@ $(() => {
             $('#b_' + (i*5+j)).click(()=>{guess(i, j)})
         }
 
-    $('#link').click(()=>{
-        server_url = 'http://' + $('#addr').val() + ':' + $('#port').val()
-        send({
-                'cmd' : 'login',
-                'uid' : $('#uid').val(),
-                'pwd' : $('#pwd').val(),
-            }, res=>{
-                $('#info0').text(res.code==0 ? '登录成功' : res.msg)
-                player_id = $('#uid').val()
-                $('#nick').val(player_id)
-                set_cookie('username', $('#uid').val())
-                set_cookie('password', $('#pwd').val())
-                if (res.rid > 0){
-                    $('#room_id').val(res.rid)
-                } else {
-                    $('#room_id').val(0)
-                }
-            })
-    })
-
-    $('#speak').click(()=>{
-        if (cd['speak'] < 1000) {
-            $('#info2').text('说话太频繁！')
-            return
-        }
-        cd['speak'] = 0
-        if($('#speech').val().length==0){
-            $('#info2').text('消息不能为空！')
-            return
-        }
-        send({
-            'cmd' : 'say',
-            'cont' : $('#speech').val(),
-        }, res=>{})
-        $('#speech').val('')
-    })
+    base_set()
 
     $('#speak_shit').click(()=>{
         if (cd['speak'] < 1000) {
@@ -112,7 +42,7 @@ $(() => {
             return
         }
         cd['speak'] = 0
-        send({
+        duet_send({
             'cmd' : 'say_shit',
         }, res=>{})
     })
@@ -123,7 +53,7 @@ $(() => {
             return
         }
         cd['speak'] = 0
-        send({
+        duet_send({
             'cmd' : 'say_good',
         }, res=>{})
     })
@@ -134,7 +64,7 @@ $(() => {
             return
         }
         cd['speak'] = 0
-        send({
+        duet_send({
             'cmd' : 'say_fuck',
         }, res=>{})
     })
@@ -142,19 +72,6 @@ $(() => {
     $('#speak_reset').click(()=>{
         $('#chat_board').text('')
         chat_id = 0
-    })
-
-    $('#ready').click(()=>{
-        send({
-            'cmd' : 'ready',
-            'nick': $('#nick').val(),
-        }, res=>{
-            if(res.res==0){
-                $('#info1').text('准备就绪')
-            }else{
-                $('#info1').text(res['msg'])
-            }
-        })
     })
 
     $('#hint').click(()=>{
@@ -175,7 +92,7 @@ $(() => {
             }
         }
 
-        send({
+        duet_send({
             'cmd' : 'hint',
             'word': $('#hint0').val(),
             'num' : +$('#hint1').val(),
@@ -192,16 +109,11 @@ $(() => {
             $('#info1').text('没轮到你猜！')
             return
         }
-        send({
+        duet_send({
             'cmd' : 'nomore',
             'uid' : player_id,
         }, res=>{
         })
-    })
-
-    // hot keys
-    $(window).on('keypress', function(e) {
-        if (e.keyCode ===13) $('#speak').trigger('click')
     })
 
     setInterval(god, ter)
@@ -213,7 +125,7 @@ ask_chat = ()=>{
     if (cd['chat'] < 500) return
     if (player_id == 0) return
     cd['chat'] = 0
-    send({'cmd' : 'ask_chat', 'from' : chat_id}, res=>{
+    duet_send({'cmd' : 'ask_chat', 'from' : chat_id}, res=>{
         if(res.n>0){
             for (i in res.data) {
                 let cont = ''
@@ -238,7 +150,7 @@ ask_chat = ()=>{
 ask_info = () =>{
     if (player_id == 0 || cd['info'] < 500) return
     cd['info'] = 0
-    send({'cmd' : 'info'}, res=>{
+    duet_send({'cmd' : 'info'}, res=>{
         // new game
         if (playing==0 && res.playing==1){
             playing = res.playing
@@ -328,7 +240,7 @@ guess = (x, y)=>{
         return
     }
     console.log('Guess', x, y)
-    send({'cmd' : 'guess', 'uid' : player_id, 'pos' : [x, y]}, res=>{
+    duet_send({'cmd' : 'guess', 'uid' : player_id, 'pos' : [x, y]}, res=>{
         if (res.res==1){
             $('#info0').html('结束，按准备继续')
             alert('GG！')

@@ -1,8 +1,7 @@
-import time
 import random
 from itertools import product
 
-from .util import Lobby
+from .util import *
 
 
 class PlayerDuet:
@@ -17,15 +16,11 @@ class PlayerDuet:
         self.guessed = set()
 
 
-class RoomDuet:
+class RoomDuet(RoomBase):
     def __init__(self, rid, root):
-        self.root = root
-        self.rid = rid
-        self.inroom = []
-        self.chat = []
-        self.playing = 0
-        self.n_round = 0  # game round
-        self.words = self.root.words[:]
+        super().__init__(rid, root)
+        self.words = list(
+            set(filter(len, open(self.root.base_path / 'static/words.txt', encoding='utf-8').read().split(' '))))
         random.shuffle(self.words)
         self.points = list(product(range(5), range(5)))
         self.coin = self.round = 0
@@ -38,6 +33,13 @@ class RoomDuet:
         self.gn = 0
         self.hints = []
         self.has_hint = 0
+        self.quick_words = ['油锅里煮豆腐——越煮越燥', '火烧到额头——迫在眉睫', '吃了秦椒烤火——里外发烧', '五内如焚', '椅子底下着火——烧着屁股燎着心', '心焦火燎',
+                            '火烧火燎', '急着吃饭呢']
+        self.good_words = ['太棒棒', '飞机上挂茶壶——水瓶(平)高', '冰雪聪明', '肚子里怀了个地图——知晓天下事', '兰质蕙心', '脱了毛的鞋刷子——有板有眼',
+                           '瞎子打拳——手法熟',
+                           '聪明一世', '善解人意']
+        self.fuck_words = ['???', '白昼见鬼', '¿', '离大谱', '擀面杖吹火——窍不通', '放风筝断了线——没指望了', '东洋人戴高帽——假充大个',
+                           '人贵有自知之明', 'So common but confident!', 'What r u doing?']
 
     @property
     def hinter(self):
@@ -47,55 +49,23 @@ class RoomDuet:
     def get_player(self, uid):
         return self.root.players[uid]
 
-    def remove_player(self, uid):
-        if uid in self.inroom:
-            self.inroom.remove(uid)
-            self.stop_game()
-
-    def add_player(self, data):
-        if len(self.inroom) >= 2 and data['uid'] not in self.inroom:
-            return {'code': 1, 'msg': 'Room is full'}
-        if data['uid'] in self.inroom:
-            return {'code': 0, 'msg': 'Already in'}
-        self.inroom.append(data['uid'])
-        self.get_player(data['uid']).rid = self.rid
-        print(f'Room {self.rid} now has {self.inroom}')
-        return {'code': 0}
-
-    def add_say(self, data):
-        if len(self.chat) > 1000:
-            self.chat = []
-            self.dy_say(u'聊天记录过多，已清理')
-        print('Add speak: ', self.get_player(data['uid']).name, data['cont'])
-        self.chat.append((self.get_player(data['uid']).name, data['cont']))
-        return {'res': 0}
-
     def add_say_fuck(self, data):
-        fuck_word = random.choice(self.root.fuck_words)
+        fuck_word = random.choice(self.fuck_words)
         self.shit_say(f'{self.get_player(data["uid"]).name}表示：{fuck_word}')
         return {'res': 0}
 
     def add_say_good(self, data):
-        good_word = random.choice(self.root.good_words)
+        good_word = random.choice(self.good_words)
         self.shit_say(f'哇! {self.get_player(data["uid"]).name}觉得您真是{good_word}呢！')
         return {'res': 0}
 
     def add_say_shit(self, data):
-        quick_word = random.choice(self.root.quick_words)
+        quick_word = random.choice(self.quick_words)
         self.shit_say(f'求求你GKD吧! {self.get_player(data["uid"]).name}已经等得{quick_word}了！')
         return {'res': 0}
 
     def shit_say(self, cont):
         self.chat.append(('shit', cont))
-
-    def dy_say(self, cont):
-        self.chat.append(('', cont))
-
-    def ask_say(self, data):
-        x = data['from']
-        if x >= len(self.chat):
-            return {'n': 0}
-        return {'n': len(self.chat) - x, 'data': self.chat[x:]}
 
     def ask_info(self, data):
         if self.playing:
@@ -124,7 +94,6 @@ class RoomDuet:
             return
         if n == m == 2:
             print('Game start.')
-            self.n_round += 1
             self.playing = 1
             # turn
             self.get_player(self.inroom[0]).type ^= 1
@@ -150,16 +119,6 @@ class RoomDuet:
         self.playing = 2 if win else 0
         for u in self.inroom:
             self.get_player(u).ready = 0
-
-    def player_ready(self, data):
-        if 'nick' in data:
-            self.get_player(data['uid']).name = data['nick']
-        if self.playing == 1:
-            return {'res': 1}
-        print('{} get ready.'.format(data['uid']))
-        self.get_player(data['uid']).ready = 1
-        self.start_game()
-        return {'res': 0}
 
     def give_hint(self, data):
         if self.get_player(data['uid']).type != self.hinter:
@@ -231,27 +190,3 @@ class RoomDuet:
                 nm = self.get_player(data["uid"]).name
                 self.dy_say(o_say + f'{nm} 猜出了所有词！剩下由{nm}来给提示！')
             return {'res': 0}
-
-
-class LobbyDuet(Lobby):
-    def __init__(self):
-        super().__init__(name='duet', player_cls=PlayerDuet, room_cls=RoomDuet)
-        self.cmd_dict = {
-            'say': 'add_say',
-            'say_shit': 'add_say_shit',
-            'say_good': 'add_say_good',
-            'say_fuck': 'add_say_fuck',
-            'ask_chat': 'ask_say',
-            'info': 'ask_info',
-            'guess': 'guess',
-            'hint': 'give_hint',
-            'nomore': 'nomore',
-        }
-        self.words = list(
-            set(filter(len, open(self.base_path / 'static/words.txt', encoding='utf-8').read().split(' '))))
-        self.quick_words = ['油锅里煮豆腐——越煮越燥', '火烧到额头——迫在眉睫', '吃了秦椒烤火——里外发烧', '五内如焚', '椅子底下着火——烧着屁股燎着心', '心焦火燎',
-                            '火烧火燎', '急着吃饭呢']
-        self.good_words = ['太棒棒', '飞机上挂茶壶——水瓶(平)高', '冰雪聪明', '肚子里怀了个地图——知晓天下事', '兰质蕙心', '脱了毛的鞋刷子——有板有眼', '瞎子打拳——手法熟',
-                           '聪明一世', '善解人意']
-        self.fuck_words = ['???', '白昼见鬼', '¿', '离大谱', '擀面杖吹火——窍不通', '放风筝断了线——没指望了', '东洋人戴高帽——假充大个',
-                           '人贵有自知之明', 'So common but confident!', 'What r u doing?']

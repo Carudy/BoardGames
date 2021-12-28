@@ -25,7 +25,7 @@
             <input id="nick" type="text">
             房间号
             <input id="room_id" type="text" value="0">
-            <button id="ready" class="button dark"> 准备</button>
+            <button id="ready" class="button dark">加入并准备</button>
             <br>
             <br>
             <p style="color: brown">先连接，用户名密码都是姓名的拼音</p>
@@ -70,8 +70,7 @@
             </div>
             <div class="col">
                 房间内用户：
-                <ul>
-                    <li>xxx</li>
+                <ul id="inroom">
                 </ul>
             </div>
         </div>
@@ -100,5 +99,6 @@
 
 </body>
 <script type="text/javascript" src="{{ url_for('static', filename='web/jquery-3.6.0.min.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='web/util.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='web/draw.js') }}"></script>
 </html>
