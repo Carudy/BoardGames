@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="{{url_for('static',filename='web/favicon.ico')}}" type="image/x-icon"/>
+    <title>科研</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='web/chota.min.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='web/draw.css') }}" type="text/css">
+</head>
+<body>
+
+<div class="row" id="all">
+    <div id="login" class="col-2">
+
+    </div>
+
+
+    <div class="col-6" id="mid">
+        <h2 style="color:linen;">欢迎来到IS实验室摸鱼中心！</h2>
+        <h5 style="color:linen;">亲爱的师兄为你准备了：</h5>
+        <ul>
+            <li><a href="/duet">行动代号</a></li>
+            <li><a href="/draw">你画我猜(测试)</a></li>
+        </ul>
+    </div>
+
+    <div id="chat" class="col-4">
+    </div>
+</div>
+
+</body>
+<script type="text/javascript" src="{{ url_for('static', filename='web/jquery-3.6.0.min.js') }}"></script>
+</html>

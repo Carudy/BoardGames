@@ -14,14 +14,17 @@ lobbys = {
         'say_shit': 'add_say_shit',
         'say_good': 'add_say_good',
         'say_fuck': 'add_say_fuck',
-        'guess': 'guess',
         'hint': 'give_hint',
-        'nomore': 'nomore',
     }),
     'draw': Lobby(name='draw', player_cls=PlayerDraw, room_cls=RoomDraw, cmd_dict={
         'new_lines': 'get_lines',
     }),
 }
+
+
+@app.route('/')
+def index():
+    return render_template(f'index.html')
 
 
 @app.route('/<name>')

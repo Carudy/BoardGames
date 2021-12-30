@@ -58,7 +58,10 @@ class Lobby:
             return {'code': 1, 'msg': 'not logged in.'}
         if self.rooms[data['rid']] is None or data['uid'] not in self.rooms[data['rid']].inroom:
             return {'code': 1, 'msg': 'wrong room.'}
-        return getattr(self.rooms[data['rid']], self.cmd_dict[data['cmd']])(data)
+        try:
+            return getattr(self.rooms[data['rid']], self.cmd_dict[data['cmd']])(data)
+        except:
+            return getattr(self.rooms[data['rid']], data['cmd'])(data)
 
 
 class RoomBase:
