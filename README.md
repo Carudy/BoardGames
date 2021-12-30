@@ -1,4 +1,4 @@
-## Codename duet LAN
+## BoardGames in Lab project
 
 - Server side: python + flask
 - UI: chota.css
@@ -12,8 +12,11 @@
 python index.py
 ```
 
-3. Both vist "server_ip:6969" then "link & ready".
+3. Both vist "server_ip:6969".
+4. Choose the game and then "link & ready".
 
 ### Display
 
 ![img](./duet.png)
+
+![img](./draw.png)
