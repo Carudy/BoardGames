@@ -74,6 +74,14 @@ $(() => {
         guess()
     })
 
+    $('#giveup').click(()=>{
+        draw_send({'cmd' : 'giveup'}, res=>{})
+    })
+
+    $('#upgive').click(()=>{
+        draw_send({'cmd' : 'upgive'}, res=>{})
+    })
+
     setInterval(god, ter)
     setInterval(ask_info, 1000)
     setInterval(ask_lines, 1000)

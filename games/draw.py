@@ -9,7 +9,7 @@ class PlayerDraw:
         self.rid = 0
         self.done = 0
         self.score = 0
-        self.chance = 3
+        self.chance = 2
 
 
 class RoomDraw(RoomBase):
@@ -83,7 +83,7 @@ class RoomDraw(RoomBase):
         self.ans = random.choice(self.puzzles[self.hint])
         for uid in self.inroom:
             self[uid].done = 0
-            self[uid].chance = 3
+            self[uid].chance = 2
         print(f'{self.painter} draw {self.hint}: {self.ans}')
         self.dy_say(f'游戏开始，由{self.painter}画！')
         return {'res': 0}
@@ -94,15 +94,37 @@ class RoomDraw(RoomBase):
                 self[data['uid']].score += 1
                 self[self.painter].score += 1
                 self[data['uid']].done = 1
-                self.dy_say(f"{data['uid']} 猜对了！")
+                self.dy_say(f"{data['uid']}，猜对了！")
             else:
                 self[data['uid']].chance -= 1
                 if self[data['uid']].chance <= 0:
                     self[data['uid']].done = 1
-                self.dy_say(f"{data['uid']} 猜错了！")
+                    self[data['uid']].score -= 1
+                self.dy_say(f"{data['uid']}猜{data['ans']}，猜错了！")
         n_done = len([i for i in self.inroom if self[i].done])
         if n_done == len(self.inroom) - 1:
             self.playing = 0
-            self.dy_say(f'本局结束！下局尝试开始！')
+            self.dy_say(f'本局结束！正确答案是：{self.ans}，你猜对了🐴？下局尝试开始！')
             self.start_game()
+        return {'res': 0}
+
+    def giveup(self, data):
+        if not self.playing or data['uid'] == self.painter:
+            return {'res': 0}
+        self[data['uid']].done = 1
+        self[data['uid']].chance = 0
+        self.dy_say(f'{data["uid"]}忍不了了，选择放弃！')
+        n_done = len([i for i in self.inroom if self[i].done])
+        if n_done == len(self.inroom) - 1:
+            self.playing = 0
+            self.dy_say(f'本局结束！正确答案是：{self.ans}，你猜对了🐴？下局尝试开始！')
+            self.start_game()
+        return {'res': 0}
+
+    def upgive(self, data):
+        if not self.playing or data['uid'] != self.painter:
+            return {'res': 0}
+        self.dy_say(f'{self.painter}根本画不出来！选择放弃！')
+        self.playing = 0
+        self.start_game()
         return {'res': 0}
