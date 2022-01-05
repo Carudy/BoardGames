@@ -1,0 +1,14 @@
+2022-01-05 15:51:31,897 - e:\gitRepo\CodenamesDuet\games\util.py[line:40] - INFO: wanghao logged in
+2022-01-05 15:51:36,007 - e:\gitRepo\CodenamesDuet\games\util.py[line:94] - INFO: Room 123 now has ['wanghao']
+2022-01-05 15:51:36,007 - e:\gitRepo\CodenamesDuet\games\util.py[line:108] - INFO: wanghao get ready.
+2022-01-05 15:51:44,600 - e:\gitRepo\CodenamesDuet\games\util.py[line:40] - INFO: zhaozhixin logged in
+2022-01-05 15:51:47,827 - e:\gitRepo\CodenamesDuet\games\util.py[line:94] - INFO: Room 123 now has ['wanghao', 'zhaozhixin']
+2022-01-05 15:51:47,829 - e:\gitRepo\CodenamesDuet\games\util.py[line:108] - INFO: zhaozhixin get ready.
+2022-01-05 15:52:05,215 - e:\gitRepo\CodenamesDuet\games\util.py[line:122] - INFO: zhaozhixin(zzx) speak: hello.
+2022-01-05 15:52:08,869 - e:\gitRepo\CodenamesDuet\games\util.py[line:122] - INFO: wanghao(wh) speak: hi.
+2022-01-05 15:54:35,527 - e:\gitRepo\CodenamesDuet\games\util.py[line:40] - INFO: wanghao logged in
+2022-01-05 15:54:38,856 - e:\gitRepo\CodenamesDuet\games\util.py[line:94] - INFO: Room 22 now has ['wanghao']
+2022-01-05 15:54:38,856 - e:\gitRepo\CodenamesDuet\games\util.py[line:108] - INFO: wanghao get ready.
+2022-01-05 15:54:40,819 - e:\gitRepo\CodenamesDuet\games\util.py[line:40] - INFO: zhaozhixin logged in
+2022-01-05 15:54:44,773 - e:\gitRepo\CodenamesDuet\games\util.py[line:94] - INFO: Room 22 now has ['wanghao', 'zhaozhixin']
+2022-01-05 15:54:44,774 - e:\gitRepo\CodenamesDuet\games\util.py[line:108] - INFO: zhaozhixin get ready.

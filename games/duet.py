@@ -2,9 +2,9 @@ import random
 from itertools import product
 
 from .util import *
+from .logger import *
 
-LOG_FORMAT = "%(asctime)s - %(levelname)s - %(message)s"
-logging.basicConfig(level=logging.DEBUG, format=LOG_FORMAT)
+log = Logger('logs/duet_all.log', level='info')
 
 
 class PlayerDuet:
@@ -95,12 +95,12 @@ class RoomDuet(RoomBase):
     def start_game(self):
         n, m = len(self.inroom), len(
             [w for w in self.inroom if self.get_player(w).ready == 1])
-        logging.info('Try to start game. {} / {}'.format(m, n))
+        log.logger.info('Try to start game. {} / {}'.format(m, n))
         # print('Try to start game. {} / {}'.format(m, n))
         if n < 2:
             return
         if n == m == 2:
-            logging.info('Game start.')
+            log.logger.info('Game start.')
             # print('Game start.')
             self.playing = 1
             # turn
@@ -124,7 +124,7 @@ class RoomDuet(RoomBase):
             self.card_status = [0] * 25
 
     def stop_game(self, win=False):
-        logging.info(f'Room {self.rid} game end.')
+        log.logger.info(f'Room {self.rid} game end.')
         # print(f'Room {self.rid} game end.')
         self.coin = 0
         self.playing = 2 if win else 0
@@ -140,7 +140,7 @@ class RoomDuet(RoomBase):
         self.hints.append((data['uid'], data['word'], str(data['num'])))
         self.dy_say(
             f'{self.get_player(data["uid"]).name} 给了提示： {data["word"]}, {data["num"]}')
-        logging.info(
+        log.logger.info(
             f'{self.get_player(data["uid"]).name} 提示： {data["word"]}, {data["num"]}')
         # print(
         # f'{self.get_player(data["uid"]).name} 提示： {data["word"]}, {data["num"]}')
@@ -172,7 +172,7 @@ class RoomDuet(RoomBase):
         self.gn += 1
         self.get_player(data['uid']).guessed.add(pos)
         x = pos[0] * 5 + pos[1]
-        logging.info(
+        log.logger.info(
             f'{self.get_player(data["uid"]).name} guess {self.cards[x]}')
         # print(f'{self.get_player(data["uid"]).name} guess {self.cards[x]}')
         o_say = f'{self.get_player(data["uid"]).name} 猜了：{self.cards[x]}, '
