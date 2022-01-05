@@ -3,6 +3,9 @@ from itertools import product
 
 from .util import *
 
+LOG_FORMAT = "%(asctime)s - %(levelname)s - %(message)s"
+logging.basicConfig(level=logging.DEBUG, format=LOG_FORMAT)
+
 
 class PlayerDuet:
     def __init__(self, name):
@@ -56,12 +59,14 @@ class RoomDuet(RoomBase):
 
     def add_say_good(self, data):
         good_word = random.choice(self.good_words)
-        self.shit_say(f'哇! {self.get_player(data["uid"]).name}觉得您真是{good_word}呢！')
+        self.shit_say(
+            f'哇! {self.get_player(data["uid"]).name}觉得您真是{good_word}呢！')
         return {'res': 0}
 
     def add_say_shit(self, data):
         quick_word = random.choice(self.quick_words)
-        self.shit_say(f'求求你GKD吧! {self.get_player(data["uid"]).name}已经等得{quick_word}了！')
+        self.shit_say(
+            f'求求你GKD吧! {self.get_player(data["uid"]).name}已经等得{quick_word}了！')
         return {'res': 0}
 
     def shit_say(self, cont):
@@ -88,16 +93,20 @@ class RoomDuet(RoomBase):
         }
 
     def start_game(self):
-        n, m = len(self.inroom), len([w for w in self.inroom if self.get_player(w).ready == 1])
-        print('Try to start game. {} / {}'.format(m, n))
+        n, m = len(self.inroom), len(
+            [w for w in self.inroom if self.get_player(w).ready == 1])
+        logging.info('Try to start game. {} / {}'.format(m, n))
+        # print('Try to start game. {} / {}'.format(m, n))
         if n < 2:
             return
         if n == m == 2:
-            print('Game start.')
+            logging.info('Game start.')
+            # print('Game start.')
             self.playing = 1
             # turn
             self.get_player(self.inroom[0]).type ^= 1
-            self.get_player(self.inroom[1]).type = self.get_player(self.inroom[0]).type ^ 1
+            self.get_player(self.inroom[1]).type = self.get_player(
+                self.inroom[0]).type ^ 1
             self.get_player(self.inroom[0]).guessed = set()
             self.get_player(self.inroom[1]).guessed = set()
             self.round = 0
@@ -110,11 +119,13 @@ class RoomDuet(RoomBase):
             self.cards = self.words[:25]
             random.shuffle(self.points)
             self.green = [self.points[:9], self.points[6:15]]
-            self.black = [random.sample(self.points[9:], 3), random.sample(self.points[:6] + self.points[15:], 3)]
+            self.black = [random.sample(self.points[9:], 3), random.sample(
+                self.points[:6] + self.points[15:], 3)]
             self.card_status = [0] * 25
 
     def stop_game(self, win=False):
-        print(f'Room {self.rid} game end.')
+        logging.info(f'Room {self.rid} game end.')
+        # print(f'Room {self.rid} game end.')
         self.coin = 0
         self.playing = 2 if win else 0
         for u in self.inroom:
@@ -127,8 +138,12 @@ class RoomDuet(RoomBase):
         if self.hints and data['uid'] == self.hints[-1][0] and (not self.check_done(self.hinter ^ 1)):
             return {'res': 0, 'msg': 'has hinted'}
         self.hints.append((data['uid'], data['word'], str(data['num'])))
-        self.dy_say(f'{self.get_player(data["uid"]).name} 给了提示： {data["word"]}, {data["num"]}')
-        print(f'{self.get_player(data["uid"]).name} 提示： {data["word"]}, {data["num"]}')
+        self.dy_say(
+            f'{self.get_player(data["uid"]).name} 给了提示： {data["word"]}, {data["num"]}')
+        logging.info(
+            f'{self.get_player(data["uid"]).name} 提示： {data["word"]}, {data["num"]}')
+        # print(
+        # f'{self.get_player(data["uid"]).name} 提示： {data["word"]}, {data["num"]}')
         return {'res': 0}
 
     def check_done(self, x):
@@ -157,7 +172,9 @@ class RoomDuet(RoomBase):
         self.gn += 1
         self.get_player(data['uid']).guessed.add(pos)
         x = pos[0] * 5 + pos[1]
-        print(f'{self.get_player(data["uid"]).name} guess {self.cards[x]}')
+        logging.info(
+            f'{self.get_player(data["uid"]).name} guess {self.cards[x]}')
+        # print(f'{self.get_player(data["uid"]).name} guess {self.cards[x]}')
         o_say = f'{self.get_player(data["uid"]).name} 猜了：{self.cards[x]}, '
         rival = self.get_player(data["uid"]).type ^ 1
 
