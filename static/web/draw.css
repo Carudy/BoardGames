@@ -91,6 +91,7 @@ button{
     background: rgb(19, 19, 19);
     height: 70%;
     padding-top: 2em;
+    overflow: auto;
 }
 
 #pad{
