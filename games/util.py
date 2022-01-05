@@ -12,8 +12,10 @@ class Lobby:
         self.rooms = defaultdict(lambda: None)
         self.players = defaultdict(lambda: None)
         self.base_path = Path(os.path.dirname(__file__)).parent
-        self.accounts = eval((self.base_path / 'static/users').open(encoding='utf-8').read())
-        students = eval((self.base_path / 'static/students.txt').open(encoding='utf-8').read())
+        self.accounts = eval(
+            (self.base_path / 'static/users').open(encoding='utf-8').read())
+        students = eval(
+            (self.base_path / 'static/students.txt').open(encoding='utf-8').read())
         for stu in students:
             self.accounts[stu] = stu
         self.cmd_dict = {
@@ -44,8 +46,9 @@ class Lobby:
         if data['rid'] <= 0:
             return {'code': 1, 'msg': 'require room id > 0'}
         if self.players[data['uid']].rid != data['rid'] and self.players[data['uid']].rid > 0 and self.rooms[
-            self.players[data['uid']].rid] is not None:
-            self.rooms[self.players[data['uid']].rid].remove_player(data['uid'])
+                self.players[data['uid']].rid] is not None:
+            self.rooms[self.players[data['uid']].rid].remove_player(
+                data['uid'])
         if self.rooms[data['rid']] is None:
             self.rooms[data['rid']] = self.room_cls(rid=data['rid'], root=self)
         res = self.rooms[data['rid']].add_player(data)
