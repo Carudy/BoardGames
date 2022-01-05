@@ -88,8 +88,10 @@ class RoomDraw(RoomBase):
         for uid in self.inroom:
             self[uid].done = 0
             self[uid].chance = 2
-        logging.info(f'{self.painter} draw {self.hint}: {self.ans}')
+
+        logging.info(f'{self.painter} draw.')
         # print(f'{self.painter} draw {self.hint}: {self.ans}')
+
         self.dy_say(f'游戏开始，由{self.painter}画！')
         return {'res': 0}
 

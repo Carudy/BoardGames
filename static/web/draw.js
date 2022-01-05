@@ -27,8 +27,13 @@ $(() => {
         '黄': '#ffff11',
         '紫': '#ff11ff',
     }
-    $('canvas')[0].width = $('#stage').width()
-    $('canvas')[0].height = $('#stage').height() * 0.9
+//    $('canvas')[0].width = $('#stage').width()
+//    $('canvas')[0].height = $('#stage').height() * 0.9
+    $('canvas')[0].width = 720
+    $('canvas')[0].height = 590
+    ctx.fillStyle = "#020202"
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+
     ctx.lineWidth = 3
     ctx.lineCap = 'round'
     ctx.strokeStyle = '#ccc9cb'
@@ -83,9 +88,9 @@ $(() => {
     })
 
     setInterval(god, ter)
-    setInterval(ask_info, 1000)
-    setInterval(ask_lines, 1000)
-    setInterval(send_lines, 1000)
+    setInterval(ask_info, 500)
+    setInterval(ask_lines, 500)
+    setInterval(send_lines, 500)
 })
 
 guess = ()=>{
