@@ -2,10 +2,9 @@ import os
 from collections import defaultdict
 import time
 from pathlib import Path
-import logging
+from .logger import *
 
-LOG_FORMAT = "%(asctime)s - %(levelname)s - %(message)s"
-logging.basicConfig(level=logging.DEBUG, format=LOG_FORMAT)
+log = Logger('logs/global_all.log', level='info')
 
 
 class Lobby:
@@ -38,7 +37,7 @@ class Lobby:
             self.players[data['uid']] = self.player_cls(data['uid'])
         else:
             self.players[data['uid']].beat = time.time()
-        logging.info(f'{data["uid"]} logged in')
+        log.logger.info(f'{data["uid"]} logged in')
         # print(f'{data["uid"]} logged in')
         return {
             'code': 0,
@@ -92,7 +91,7 @@ class RoomBase:
             return {'code': 0, 'msg': 'Already in'}
         self.inroom.append(data['uid'])
         self[data['uid']].rid = self.rid
-        logging.info(f'Room {self.rid} now has {self.inroom}')
+        log.logger.info(f'Room {self.rid} now has {self.inroom}')
         # print(f'Room {self.rid} now has {self.inroom}')
         return {'code': 0}
 
@@ -106,7 +105,7 @@ class RoomBase:
             self[data['uid']].name = data['nick']
         if self.playing == 1:
             return {'res': 1, 'msg': 'Already playing.'}
-        logging.info('{} get ready.'.format(data['uid']))
+        log.logger.info('{} get ready.'.format(data['uid']))
         # print('{} get ready.'.format(data['uid']))
         self[data['uid']].ready = 1
         self.start_game()
@@ -116,7 +115,11 @@ class RoomBase:
         if len(self.chat) > 1000:
             self.chat = []
             self.dy_say(u'聊天记录过多，已清理')
-        logging.info('Add speak: ', self[data['uid']].name, data['cont'])
+        # log.logger.info('Add speak: ', self[data['uid']].name, data['cont'])
+        speaker = data['uid']
+        nick_speaker = self[data['uid']].name
+        saying = data['cont']
+        log.logger.info(f'{speaker}({nick_speaker}) speak: {saying}.')
         # print('Add speak: ', self[data['uid']].name, data['cont'])
         self.chat.append((self[data['uid']].name, data['cont']))
         return {'res': 0}

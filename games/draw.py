@@ -1,9 +1,9 @@
 import random
 
 from .util import *
+from .logger import *
 
-LOG_FORMAT = "%(asctime)s - %(levelname)s - %(message)s"
-logging.basicConfig(level=logging.DEBUG, format=LOG_FORMAT)
+log = Logger('logs/draw_all.log', level='info')
 
 
 class PlayerDraw:
@@ -89,7 +89,7 @@ class RoomDraw(RoomBase):
             self[uid].done = 0
             self[uid].chance = 2
 
-        logging.info(f'{self.painter} draw.')
+        log.logger.info(f'{self.painter} draw.')
         # print(f'{self.painter} draw {self.hint}: {self.ans}')
 
         self.dy_say(f'游戏开始，由{self.painter}画！')
