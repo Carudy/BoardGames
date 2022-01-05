@@ -83,9 +83,9 @@ $(() => {
     })
 
     setInterval(god, ter)
-    setInterval(ask_info, 1000)
-    setInterval(ask_lines, 1000)
-    setInterval(send_lines, 1000)
+    setInterval(ask_info, 500)
+    setInterval(ask_lines, 500)
+    setInterval(send_lines, 500)
 })
 
 guess = ()=>{
