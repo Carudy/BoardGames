@@ -2,6 +2,10 @@ import os
 from collections import defaultdict
 import time
 from pathlib import Path
+import logging
+
+LOG_FORMAT = "%(asctime)s - %(levelname)s - %(message)s"
+logging.basicConfig(level=logging.DEBUG, format=LOG_FORMAT)
 
 
 class Lobby:
@@ -34,7 +38,8 @@ class Lobby:
             self.players[data['uid']] = self.player_cls(data['uid'])
         else:
             self.players[data['uid']].beat = time.time()
-        print(f'{data["uid"]} logged in')
+        logging.info(f'{data["uid"]} logged in')
+        # print(f'{data["uid"]} logged in')
         return {
             'code': 0,
             'rid': self.players[data['uid']].rid,
@@ -87,7 +92,8 @@ class RoomBase:
             return {'code': 0, 'msg': 'Already in'}
         self.inroom.append(data['uid'])
         self[data['uid']].rid = self.rid
-        print(f'Room {self.rid} now has {self.inroom}')
+        logging.info(f'Room {self.rid} now has {self.inroom}')
+        # print(f'Room {self.rid} now has {self.inroom}')
         return {'code': 0}
 
     def remove_player(self, uid):
@@ -100,7 +106,8 @@ class RoomBase:
             self[data['uid']].name = data['nick']
         if self.playing == 1:
             return {'res': 1, 'msg': 'Already playing.'}
-        print('{} get ready.'.format(data['uid']))
+        logging.info('{} get ready.'.format(data['uid']))
+        # print('{} get ready.'.format(data['uid']))
         self[data['uid']].ready = 1
         self.start_game()
         return {'res': 0}
@@ -109,7 +116,8 @@ class RoomBase:
         if len(self.chat) > 1000:
             self.chat = []
             self.dy_say(u'聊天记录过多，已清理')
-        print('Add speak: ', self[data['uid']].name, data['cont'])
+        logging.info('Add speak: ', self[data['uid']].name, data['cont'])
+        # print('Add speak: ', self[data['uid']].name, data['cont'])
         self.chat.append((self[data['uid']].name, data['cont']))
         return {'res': 0}
 

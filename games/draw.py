@@ -2,6 +2,9 @@ import random
 
 from .util import *
 
+LOG_FORMAT = "%(asctime)s - %(levelname)s - %(message)s"
+logging.basicConfig(level=logging.DEBUG, format=LOG_FORMAT)
+
 
 class PlayerDraw:
     def __init__(self, name):
@@ -19,7 +22,8 @@ class RoomDraw(RoomBase):
         self.lines = []
         self.step = 512
         self.n_reset = 0
-        self.puzzles = eval(open(self.root.base_path / 'static/puzzle.txt', encoding='utf-8').read())
+        self.puzzles = eval(
+            open(self.root.base_path / 'static/puzzle.txt', encoding='utf-8').read())
         self.hint = ''
         self.ans = ''
 
@@ -84,7 +88,8 @@ class RoomDraw(RoomBase):
         for uid in self.inroom:
             self[uid].done = 0
             self[uid].chance = 2
-        print(f'{self.painter} draw {self.hint}: {self.ans}')
+        logging.info(f'{self.painter} draw {self.hint}: {self.ans}')
+        # print(f'{self.painter} draw {self.hint}: {self.ans}')
         self.dy_say(f'游戏开始，由{self.painter}画！')
         return {'res': 0}
 
