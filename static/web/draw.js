@@ -18,7 +18,7 @@ $(() => {
 
     base_set()
 
-    var draw_pos = {x:0, y:0}
+    var draw_pos = { x: 0, y: 0 }
     var color_dict = {
         '白': '#ccc9cb',
         '红': '#ff1111',
@@ -27,8 +27,8 @@ $(() => {
         '黄': '#ffff11',
         '紫': '#ff11ff',
     }
-//    $('canvas')[0].width = $('#stage').width()
-//    $('canvas')[0].height = $('#stage').height() * 0.9
+    //    $('canvas')[0].width = $('#stage').width()
+    //    $('canvas')[0].height = $('#stage').height() * 0.9
     $('canvas')[0].width = 720
     $('canvas')[0].height = 590
     ctx.fillStyle = "#020202"
@@ -38,24 +38,24 @@ $(() => {
     ctx.lineCap = 'round'
     ctx.strokeStyle = '#ccc9cb'
 
-    var set_draw_pos = e => {draw_pos.x = e.offsetX; draw_pos.y = e.offsetY;}
+    var set_draw_pos = e => { draw_pos.x = e.offsetX; draw_pos.y = e.offsetY; }
 
-    $('.painter').click((e)=>{
+    $('.painter').click((e) => {
         if (!playing || player_type == 0) return
         ctx.strokeStyle = color_dict[e.target.innerText]
     })
 
-    $('canvas').mousedown(e=>{
+    $('canvas').mousedown(e => {
         if (!playing || player_type == 0) return
         set_draw_pos(e)
     })
 
-    $('canvas').mouseenter(e=>{
+    $('canvas').mouseenter(e => {
         if (!playing || player_type == 0) return
         set_draw_pos(e)
     })
 
-    $('canvas').mousemove(e=>{
+    $('canvas').mousemove(e => {
         if (!playing || player_type == 0) return
         if (e.buttons !== 1) return;
         ctx.beginPath()
@@ -71,20 +71,20 @@ $(() => {
         ctx.stroke()
     })
 
-    $('#reset').click(()=>{
+    $('#reset').click(() => {
         reset_draw()
     })
 
-    $('#hint').click(()=>{
+    $('#hint').click(() => {
         guess()
     })
 
-    $('#giveup').click(()=>{
-        draw_send({'cmd' : 'giveup'}, res=>{})
+    $('#giveup').click(() => {
+        draw_send({ 'cmd': 'giveup' }, res => { })
     })
 
-    $('#upgive').click(()=>{
-        draw_send({'cmd' : 'upgive'}, res=>{})
+    $('#upgive').click(() => {
+        draw_send({ 'cmd': 'upgive' }, res => { })
     })
 
     setInterval(god, ter)
@@ -93,29 +93,29 @@ $(() => {
     setInterval(send_lines, 500)
 })
 
-guess = ()=>{
+guess = () => {
     if (player_type == 1 || chance <= 0) return
-    draw_send({'cmd' : 'guess', 'ans': $('#guess_cont').val()}, res=>{
+    draw_send({ 'cmd': 'guess', 'ans': $('#guess_cont').val() }, res => {
         $('#guess_cont').val('')
     })
 }
 
-reset_draw = ()=>{
+reset_draw = () => {
     if (player_type == 0) return
     lines = []
     send_id = 0
     ctx.clearRect(0, 0, $('canvas')[0].width, $('canvas')[0].height)
-    draw_send({'cmd' : 'reset'}, res=>{})
+    draw_send({ 'cmd': 'reset' }, res => { })
 }
 
-ask_lines = ()=>{
+ask_lines = () => {
     if (!playing) return
     draw_send({
-        'cmd' : 'ask_lines',
+        'cmd': 'ask_lines',
         'from': lines.length,
-    }, e=>{
+    }, e => {
         if (!e.hasOwnProperty('lines')) return
-        for(let _l of e['lines']){
+        for (let _l of e['lines']) {
             ctx.strokeStyle = _l['color']
             ctx.beginPath()
             ctx.moveTo(_l['st'][0], _l['st'][1])
@@ -126,64 +126,64 @@ ask_lines = ()=>{
     })
 }
 
-send_lines = ()=>{
-    if (player_type == 0 || +$('#room_id').val()<=0 || send_id >= lines.length){
+send_lines = () => {
+    if (player_type == 0 || +$('#room_id').val() <= 0 || send_id >= lines.length) {
         return
     }
-    to_send = lines.slice(send_id, send_id+send_step)
-    send_id = send_id+send_step >= lines.length ? lines.length : send_id+send_step
+    to_send = lines.slice(send_id, send_id + send_step)
+    send_id = send_id + send_step >= lines.length ? lines.length : send_id + send_step
     draw_send({
-        'cmd' : 'new_lines',
+        'cmd': 'new_lines',
         'lines': to_send,
-    }, e=>{})
+    }, e => { })
 }
 
-ask_info = () =>{
-    if (player_id == 0 || +$('#room_id').val()==0) return
-    draw_send({'cmd' : 'info'}, res=>{
-         if (res.hasOwnProperty('inroom')){
+ask_info = () => {
+    if (player_id == 0 || +$('#room_id').val() == 0) return
+    draw_send({ 'cmd': 'info' }, res => {
+        if (res.hasOwnProperty('inroom')) {
             room_mates = ''
             for (let i of res['inroom']) {
-                room_mates += '<li>' + i['name'] + '\t分数：' + i['score'] +'</li>'
+                room_mates += '<li>' + i['name'] + '\t分数：' + i['score'] + '</li>'
             }
             $('#inroom').html(room_mates)
         }
         playing = res['playing']
         player_type = (playing && (player_id == res['painter'])) ? 1 : 0
 
-        if (playing){
-            if (game_round != res['round']){
+        if (playing) {
+            if (game_round != res['round']) {
                 game_round = res['round']
                 lines = []
                 send_id = 0
                 ctx.clearRect(0, 0, $('canvas')[0].width, $('canvas')[0].height)
             }
-            if (player_type == 0 && res['reset'] != n_reset){
+            if (player_type == 0 && res['reset'] != n_reset) {
                 n_reset = res['reset']
                 lines = []
                 send_id = 0
                 ctx.clearRect(0, 0, $('canvas')[0].width, $('canvas')[0].height)
             }
             if (player_type == 0) {
-                $('#info1').text('提示：' + res['hint'])
+                $('#info1').text('提示：' + res['hint'] + '  字数：' + res['len_ans'])
                 chance = res['chance']
                 $('#info2').text('剩余次数：' + chance)
-            }else{
+            } else {
                 $('#info1').text('你画：' + res['ans'])
             }
         }
     })
 }
 
-ask_chat = ()=>{
+ask_chat = () => {
     if (cd['chat'] < 500) return
     if (player_id == 0) return
     cd['chat'] = 0
-    draw_send({'cmd' : 'ask_chat', 'from' : chat_id}, res=>{
-        if(res.n>0){
+    draw_send({ 'cmd': 'ask_chat', 'from': chat_id }, res => {
+        if (res.n > 0) {
             for (i in res.data) {
                 let cont = ''
-                if (res.data[i][0] && res.data[i][0] != 'shit'){
+                if (res.data[i][0] && res.data[i][0] != 'shit') {
                     cont = res.data[i][0] + ': ' + res.data[i][1]
                     cont = '<div class="chat_box">' + cont + '</div>'
                 } else if (res.data[i][0] == 'shit') {
@@ -201,8 +201,8 @@ ask_chat = ()=>{
     })
 }
 
-god = ()=>{
-    for(i in cd){
+god = () => {
+    for (i in cd) {
         cd[i] = Math.min(cd[i] + ter, 5000)
     }
     ask_chat()

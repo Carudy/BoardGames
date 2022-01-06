@@ -28,6 +28,8 @@ button{
 #con input{
     margin-top: 0.5vh;
     margin-bottom: 0.5vh;
+    margin-left: 0.5vh;
+    width: 50%;
 }
 
 #con > * {

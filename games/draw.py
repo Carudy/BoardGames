@@ -70,6 +70,7 @@ class RoomDraw(RoomBase):
                 ret.update({
                     'hint': self.hint,
                     'chance': self[data['uid']].chance,
+                    'len_ans': len(self.ans)
                 })
         return ret
 
@@ -88,7 +89,6 @@ class RoomDraw(RoomBase):
         for uid in self.inroom:
             self[uid].done = 0
             self[uid].chance = 2
-
 
         log.logger.info(f'{self.painter} draw.')
         # print(f'{self.painter} draw {self.hint}: {self.ans}')
